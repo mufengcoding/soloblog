@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>【网络】复习网络七层模型 - mufengs 的个人博客</title><meta name="description" content="七层模型，亦称OSI（Open System Interconnection）参考模型，是参考模型是国际标准化组织（ISO）制定的一个用于计算机或通信系统间互联的标准体系。\n&gt;它是一个七层的、抽象的模型体，不仅包括一系列抽象的术语或概念，也包括具体的协议。"/><meta property="og:description" content="七层模型，亦称OSI（Open System Interconnection）参考模型，是参考模型是国际标准化组织（ISO）制定的一个用于计算机或通信系统间互联的标准体系。\n&gt;它是一个七层的、抽象的模型体，不仅包括一系列抽象的术语或概念，也包括具体的协议。"/>    <meta name="keywords" content="mfuengs,沐风,Solo,博客,开源"/><link rel="dns-prefetch" href="https://blog.mufengs.com"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://blog.mufengs.com"><link rel="icon" type="image/png" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="apple-touch-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><link rel="shortcut icon" type="image/x-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="【网络】复习网络七层模型 - mufengs 的个人博客"/><meta property="og:site_name" content="mufengs 的个人博客"/><meta property="og:url"      content="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html?"/><meta property="og:image" content="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="search" type="application/opensearchdescription+xml" title="【网络】复习网络七层模型 - mufengs 的个人博客" href="/opensearch.xml"><link href="https://blog.mufengs.com/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://blog.mufengs.com/manifest.json">        <link rel="canonical" href="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html">        <link rel="stylesheet"
+              href="https://blog.mufengs.com/skins/9IPHP/css/base.css?1582365382210"/>
+            <link rel="prev" title="【倒计时 7 天】开放友情链接互连" href="https://blog.mufengs.com/articles/2018/10/19/1539915936370.html">
+            <link rel="next" title="每周分享-第一期20181102" href="https://blog.mufengs.com/articles/2018/11/02/1541139674442.html">
+    <meta name="chinaz-site-verification" content="F660A6FCE0996EE8">
+<meta name="msvalidate.01" content="17F5C77D3C4574E00E1184C8C88CDF3D" />
+
+<meta name="baidu-site-verification" content="O2dbWwPD4c" />
+<meta http-equiv="Content-Language" contect="zh-CN">
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2020382208193428",
+    enable_page_level_ads: true
+  });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129717363-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-129717363-1');
+</script>
+<meta name="baidu-site-verification" content="EVS4zXFLDE" /></head>
+<body>
+<header>
+    <div class="banner">
+        <div class="fn-clear wrapper">
+            <h1 class="fn-inline">
+                <a href="https://blog.mufengs.com" rel="start">
+                    mufengs 的个人博客
+                </a>
+            </h1>
+            <small> &nbsp; 没有引发任何行动的思想都不是思想，而是梦想。 —— 马丁</small>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="fn-clear wrapper">
+            <nav class="fn-left">
+                <a href="https://blog.mufengs.com">
+                    <i class="icon-home"></i>
+                    首页
+                </a>
+                    <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                        <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                    </a>
+                    <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                        <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                    </a>
+                    <a href="https://www.opschina.top/" target="_self" rel="section">
+                        <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                    </a>
+                    <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                        <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                    </a>
+                    <a href="/my-github-repos" target="_self" rel="section">
+                        <img class="page-icon" src="/images/github-icon.png">我的开源
+                    </a>
+                <a href="https://blog.mufengs.com/tags.html" rel="section">
+                    <i class="icon-tags"></i> 标签墙
+                </a>
+                <a href="https://blog.mufengs.com/archives.html">
+                    <i class="icon-inbox"></i> 存档
+                </a>
+                <a rel="archive" href="https://blog.mufengs.com/links.html">
+                    <i class="icon-link"></i> 友情链接
+                </a>
+                <a rel="alternate" href="https://blog.mufengs.com/rss.xml" rel="section">
+                    <i class="icon-rss"></i> RSS
+                </a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="responsive fn-none">
+    <i class="icon-list"></i>
+    <ul class="list">
+        <li>
+            <a href="https://blog.mufengs.com">
+                <i class="icon-home"></i>
+                首页
+            </a>
+        </li>
+            <li>
+                <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                    <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                    <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                </a>
+            </li>
+            <li>
+                <a href="https://www.opschina.top/" target="_self" rel="section">
+                    <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                </a>
+            </li>
+            <li>
+                <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                    <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                </a>
+            </li>
+            <li>
+                <a href="/my-github-repos" target="_self" rel="section">
+                    <img class="page-icon" src="/images/github-icon.png">我的开源
+                </a>
+            </li>
+        <li>
+            <a href="https://blog.mufengs.com/tags.html" rel="section">
+                <i class="icon-tags"></i> 标签墙
+            </a>
+        </li>
+        <li>
+            <a href="https://blog.mufengs.com/archives.html">
+                <i class="icon-inbox"></i> 存档
+            </a>
+        </li>
+        <li>
+            <a rel="archive" href="https://blog.mufengs.com/links.html">
+                <i class="icon-link"></i> 友情链接
+            </a>
+        </li>
+        <li>
+            <a rel="alternate" href="https://blog.mufengs.com/rss.xml" rel="section">
+                <i class="icon-rss"></i> RSS
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="wrapper">
+    <div class="main-wrap">
+        <main>
+            <article class="post">
+                <header>
+                    <h2>
+                        <a rel="bookmark" href="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html">
+                            【网络】复习网络七层模型
+                        </a>
+                    </h2>
+                    <div class="meta">
+                                <span class="vditor-tooltipped vditor-tooltipped__n"
+                                      aria-label="更新日期">
+                                    <i class="icon-date"></i>
+                                    <time>
+                                    2019-01-04
+                                    </time>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="评论数">
+                                    <i class="icon-comments"></i>
+                                    <a href="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html#b3logsolocomments">
+                                        <span data-uvstatcmt="1539964901379">0</span> 评论</a>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="浏览数">
+                                    <i class="icon-views"></i>
+                        <span data-uvstaturl="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html">326</span> 浏览
+                                </span>
+                    </div>
+                </header>
+
+                <div class="vditor-reset post__content">
+                    <p>百度定义：\n&gt; 七层模型，亦称OSI（Open System Interconnection）参考模型，是参考模型是国际标准化组织（ISO）制定的一个用于计算机或通信系统间互联的标准体系。\n&gt;它是一个七层的、抽象的模型体，不仅包括一系列抽象的术语或概念，也包括具体的协议。\n\n### OSI七层模型\n\n<img src="https://img.hacpai.com/file/2018/10/471e1b25dc634e0fb2f4e87771e943bb_image.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="imagepng">\n\n1、OSI七层网络模型称为开发式系统互联网参考模型，是一个逻辑上的定义和规范； \n2、把网络从逻辑上分为七层，每一层都有相应的物理设备 \n3、OSI七层网络模型是一种框架式的设计方法，最主要的功能就是帮助不同类型的主机实现数据传输； \n4、最大的优点就是将服务、接口和协议三个概念明确的区分起来 \n5、复杂且不实用；经常使用的是TCP/IP四层模型。\n\n各部分及功能：\n1、应用层：针对你特定应用的协议 \n2、表示层：设备固定的数据格式和网络标准数据格式之间的转化 \n3、会话层：通信管理，负责建立和单开通信连接，管理传输层 以下分层 \n4、传输层：管理两个节点之间的数据传递。负责可靠传输 \n5、网络层：地址管理和路由选择 \n6、数据链路层：互联设备之间传送和识别数据帧 \n7、物理层：界定连接器和网线之间的规格\n\n### TCP/IP四（五）层模型\n\n每一层都呼叫它的下一层提供的网络来完成自己的需求。（如果是四层模型数据链路层和物理层在一层） \n1、物理层：负责光电信号传递方式。集线器工作在物理层。以太网协议。 \n2、数据链路层：负责设备之间的数据帧的传输和识别。交换机工作在数据链路层。例如网卡设备的驱动，帧同步，冲突检测，数据差错校验等工作。 \n3、网络层：负责地址管理和路由选择。路由器工作在网络层。 \n4、传输层：负责两台主机之间的数据传输。 \n5、应用层：负责应用程序之间的沟通。网络编程主要针对的就是应用层。\n\n传输层和网络层的封装在操作系统完成。应用层的封装在应用程序中完成。 \n数据链路层和物理层的封装在设备驱动程序与网络接口中完成。 \n\n\n关系： \n\n<img src="https://img.hacpai.com/file/2018/10/fde71bf38ec54217bd6293f6a3954b0c_image.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="imagepng">\n\n\n一般而言： \n* 对于一台主机，它的操作系统内核实现了传输层到物理层的内容 \n* 对于一台路由器，它实现了从网络层到物理层 \n* 对于一台交换机，它实现了由数据链路层到物理层 \n* 对于集线器，他只实现了物理层。\n\n补充：\n#### 四层、七层负载均衡的区别\n============\n\n\n1.  所谓四层就是基于IP+端口的负载均衡；七层就是基于URL等应用层信息的负载均衡；同理，还有基于MAC地址的二层负载均衡和基于IP地址的三层负载均衡。 换句换说，二层负载均衡会通过一个虚拟MAC地址接收请求，然后再分配到真实的MAC地址；三层负载均衡会通过一个虚拟IP地址接收请求，然后再分配到真实的IP地址；四层通过虚拟IP+端口接收请求，然后再分配到真实的服务器；七层通过虚拟的URL或主机名接收请求，然后再分配到真实的服务器。\n    \n2. 所谓的四到七层负载均衡，就是在对后台的服务器进行负载均衡时，依据四层的信息或七层的信息来决定怎么样转发流量。比如四层的负载均衡，就是通过发布三层的IP地址（VIP），然后加四层的端口号，来决定哪些流量需要做负载均衡，对需要处理的流量进行NAT处理，转发至后台服务器，并记录下这个TCP或者UDP的流量是由哪台服务器处理的，后续这个连接的所有流量都同样转发到同一台服务器处理。七层的负载均衡，就是在四层的基础上（<strong>没有四层是绝对不可能有七层的</strong>），再考虑应用层的特征，比如同一个Web服务器的负载均衡，除了根据VIP加80端口辨别是否需要处理的流量，还可根据七层的URL、浏览器类别、语言来决定是否要进行负载均衡。举个例子，如果你的Web服务器分成两组，一组是中文语言的，一组是英文语言的，那么七层负载均衡就可以当用户来访问你的域名时，自动辨别用户语言，然后选择对应的语言服务器组进行负载均衡处理。\n    \n3.  负载均衡器通常称为四层交换机或七层交换机。四层交换机主要分析IP层及TCP/UDP层，实现四层流量负载均衡。七层交换机除了支持四层负载均衡以外，还有分析应用层的信息，如HTTP协议URI或Cookie信息。\n    \n4.  负载均衡分为L4 switch（四层交换），即在OSI第4层工作，就是TCP层啦。此种Load Balance不理解应用协议（如HTTP/FTP/MySQL等等）。例子：LVS，F5。\n    \n5.  另一种叫做L7 switch（七层交换），OSI的最高层，应用层。此时，该Load Balancer能理解应用协议。例子： haproxy，MySQL Proxy。\n    \n\n注意：上面的很多Load Balancer既可以做四层交换，也可以做七层交换。\n\n##### 二、区别\n\n1.  技术原理上  \n    **　所谓四层负载均衡**，也就是主要通过报文中的目标地址和端口，再加上负载均衡设备设置的服务器选择方式，决定最终选择的内部服务器。  \n    以常见的TCP为例，负载均衡设备在接收到第一个来自客户端的SYN 请求时，即通过上述方式选择一个最佳的服务器，并对报文中目标IP地址进行修改(改为后端服务器IP），直接转发给该服务器。TCP的连接建立，即三次握手是客户端和服务器直接建立的，负载均衡设备只是起到一个类似路由器的转发动作。在某些部署情况下，为保证服务器回包可以正确返回给负载均衡设备，在转发报文的同时可能还会对报文原来的源地址进行修改。  \n    <a href="https://link.jianshu.com?t=http://officialblog-wordpress.stor.sinaapp.com/uploads/2014/07/d.png" target="_blank"></a>\n    \n    <img src="https://img.hacpai.com/e/0828bc8396624893833eb69f95d0461a.webp?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="">\n    \n\n  所谓七层负载均衡**，也称为\u201c内容交换\u201d，也就是主要通过报文中的真正有意义的应用层内容，再加上负载均衡设备设置的服务器选择方式，决定最终选择的内部服务器。\n    \n   以常见的TCP为例，负载均衡设备如果要根据真正的应用层内容再选择服务器，只能先代理最终的服务器和客户端建立连接(三次握手)后，才可能接受到客户端发送的真正应用层内容的报文，然后再根据该报文中的特定字段，再加上负载均衡设备设置的服务器选择方式，决定最终选择的内部服务器。负载均衡设备在这种情况下，更类似于一个代理服务器。负载均衡和前端的客户端以及后端的服务器会分别建立TCP连接。所以从这个技术原理上来看，七层负载均衡明显的对负载均衡设备的要求更高，处理七层的能力也必然会低于四层模式的部署方式。\n    \n2.  应用场景  \n    七层应用负载的好处，是使得整个网络更智能化。例如访问一个网站的用户流量，可以通过七层的方式，将对图片类的请求转发到特定的图片服务器并可以使用缓存技术；将对文字类的请求可以转发到特定的文字服务器并可以使用压缩技术。当然这只是七层应用的一个小案例，从技术原理上，这种方式可以对客户端的请求和服务器的响应进行任意意义上的修改，极大的提升了应用系统在网络层的灵活性。很多在后台，例如Nginx或者Apache上部署的功能可以前移到负载均衡设备上，例如客户请求中的Header重写，服务器响应中的关键字过滤或者内容插入等功能。  \n    另外一个常常被提到功能就是安全性。网络中最常见的SYN Flood攻击，即黑客控制众多源客户端，使用虚假IP地址对同一目标发送SYN攻击，通常这种攻击会大量发送SYN报文，耗尽服务器上的相关资源，以达到Denial of Service(<em>DoS</em>)的目的。从技术原理上也可以看出，四层模式下这些SYN攻击都会被转发到后端的服务器上；而七层模式下这些SYN攻击自然在负载均衡设备上就截止，不会影响后台服务器的正常运营。另外负载均衡设备可以在七层层面设定多种策略，过滤特定报文，例如SQL Injection等应用层面的特定攻击手段，从应用层面进一步提高系统整体安全。  \n    现在的7层负载均衡，主要还是着重于应用HTTP协议，所以其应用范围主要是众多的网站或者内部信息平台等基于B/S开发的系统。 4层负载均衡则对应其他TCP应用，例如基于C/S开发的ERP等系统。\n    \n\n##### 三、Nginx、LVS及HAProxy负载均衡软件的优缺点\n\n负载均衡 （Load Balancing） 建立在现有网络结构之上，它提供了一种廉价有效透明的方法扩展网络设备和服务器的带宽、增加吞吐量、加强网络数据处理能力，同时能够提高网络的灵活性和可用性。\n\nNginx/LVS/HAProxy是目前使用最广泛的三种负载均衡软件。\n\n一般对负载均衡的使用是随着网站规模的提升根据不同的阶段来使用不同的技术。具体的应用需求还得具体分析，如果是中小型的Web应用，比如日PV小于1000万，用Nginx就完全可以了；如果机器不少，可以用DNS轮询，LVS所耗费的机器还是比较多的；大型网站或重要的服务，且服务器比较多时，可以考虑用LVS。\n\n一种是通过硬件来进行，常见的硬件有比较昂贵的F5和Array等商用的负载均衡器，它的优点就是有专业的维护团队来对这些服务进行维护、缺点就是花销太大，所以对于规模较小的网络服务来说暂时还没有需要使用；另外一种就是类似于Nginx/LVS/HAProxy的基于 Linux的开源免费的负载均衡软件，这些都是通过软件级别来实现，所以费用非常低廉。\n\n目前关于网站架构一般比较合理流行的架构方案：Web前端采用Nginx/HAProxy+ Keepalived作负载均衡器；后端采用 MySQL数据库一主多从和读写分离，采用LVS+Keepalived的架构。当然要根据项目具体需求制定方案。\n\n下面说说各自的特点和适用场合。\n\n<strong>Nginx的优点是：</strong>\n\n1.  工作在网络的7层之上，可以针对http应用做一些分流的策略，比如针对域名、目录结构，它的正则规则比HAProxy更为强大和灵活，这也是它目前广泛流行的主要原因之一，Nginx单凭这点可利用的场合就远多于LVS了。\n    \n2.  Nginx对网络稳定性的依赖非常小，理论上能ping通就就能进行负载功能，这个也是它的优势之一；相反LVS对网络稳定性依赖比较大。\n    \n3.  Nginx安装和配置比较简单，测试起来比较方便，它基本能把错误用日志打印出来。LVS的配置、测试就要花比较长的时间了，LVS对网络依赖比较大。\n    \n4.  可以承担高负载压力且稳定，在硬件不差的情况下一般能支撑几万次的并发量，负载度比LVS相对小些。\n    \n5.  Nginx可以通过端口检测到服务器内部的故障，比如根据服务器处理网页返回的状态码、超时等等，并且会把返回错误的请求重新提交到另一个节点，不过其中缺点就是不支持url来检测。比如用户正在上传一个文件，而处理该上传的节点刚好在上传过程中出现故障，Nginx会把上传切到另一台服务器重新处理，而LVS就直接断掉了，如果是上传一个很大的文件或者很重要的文件的话，用户可能会因此而不满。\n    \n6.  Nginx不仅仅是一款优秀的负载均衡器/反向代理软件，它同时也是功能强大的Web应用服务器。LNMP也是近几年非常流行的web架构，在高流量的环境中稳定性也很好。\n    \n7.  Nginx现在作为Web反向加速缓存越来越成熟了，速度比传统的Squid服务器更快，可以考虑用其作为反向代理加速器。\n    \n8.  Nginx可作为中层反向代理使用，这一层面Nginx基本上无对手，唯一可以对比Nginx的就只有 lighttpd了，不过 lighttpd目前还没有做到Nginx完全的功能，配置也不那么清晰易读，社区资料也远远没Nginx活跃。\n    \n9.  Nginx也可作为静态网页和图片服务器，这方面的性能也无对手。还有Nginx社区非常活跃，第三方模块也很多。\n    \n\n<strong>Nginx的缺点是：</strong>\n\n1.  Nginx仅能支持http、https和Email协议，这样就在适用范围上面小些，这个是它的缺点。\n    \n2.  对后端服务器的健康检查，只支持通过端口来检测，不支持通过url来检测。不支持Session的直接保持，但能通过ip\_hash来解决。\n    \n\nLVS：使用Linux内核集群实现一个高性能、高可用的负载均衡服务器，它具有很好的可伸缩性（Scalability)、可靠性（Reliability)和可管理性（Manageability)。\n\n<strong>LVS的优点是：</strong>\n\n1.  抗负载能力强、是工作在网络4层之上仅作分发之用，没有流量的产生，这个特点也决定了它在负载均衡软件里的性能最强的，对内存和cpu资源消耗比较低。\n    \n2.  配置性比较低，这是一个缺点也是一个优点，因为没有可太多配置的东西，所以并不需要太多接触，大大减少了人为出错的几率。\n    \n3.  工作稳定，因为其本身抗负载能力很强，自身有完整的双机热备方案，如LVS+Keepalived。\n    \n4.  无流量，LVS只分发请求，而流量并不从它本身出去，这点保证了均衡器IO的性能不会受到大流量的影响。\n    \n5.  应用范围比较广，因为LVS工作在4层，所以它几乎可以对所有应用做负载均衡，包括http、数据库、在线聊天室等等。\n    \n\n<strong>LVS的缺点是：</strong>\n\n1.  软件本身不支持正则表达式处理，不能做动静分离；而现在许多网站在这方面都有较强的需求，这个是Nginx/HAProxy+Keepalived的优势所在。\n    \n2.  如果是网站应用比较庞大的话，LVS/DR+Keepalived实施起来就比较复杂了，特别后面有 Windows Server的机器的话，如果实施及配置还有维护过程就比较复杂了，相对而言，Nginx/HAProxy+Keepalived就简单多了。\n    \n\n<strong>HAProxy的特点是：</strong>\n\n1.  HAProxy也是支持虚拟主机的。\n    \n2.  HAProxy的优点能够补充Nginx的一些缺点，比如<strong>支持Session的保持，Cookie的引导；同时支持通过获取指定的url来检测后端服务器的状态。</strong>\n    \n3.  HAProxy跟LVS类似，本身就只是一款负载均衡软件；单纯从效率上来讲HAProxy会比Nginx有更出色的负载均衡速度，在并发处理上也是优于Nginx的。\n    \n4.  HAProxy<strong>支持TCP协议的负载均衡转发</strong>，可以对MySQL读进行负载均衡，对后端的MySQL节点进行检测和负载均衡，大家可以用LVS+Keepalived对MySQL主从做负载均衡。\n    \n5.  HAProxy负载均衡策略非常多，HAProxy的负载均衡算法现在具体有如下8种：  \n    ① roundrobin，表示简单的轮询，这个不多说，这个是负载均衡基本都具备的；  \n    ② static-rr，表示根据权重，建议关注；  \n    ③ leastconn，表示最少连接者先处理，建议关注；  \n    ④ source，表示根据请求源IP，这个跟Nginx的IP\_hash机制类似，我们用其作为解决session问题的一种方法，建议关注；  \n    ⑤ ri，表示根据请求的URI；  \n    ⑥ rl\_param，表示根据请求的URl参数\u2019balance url\_param\u2019 requires an URL parameter name；  \n    ⑦ hdr(name)，表示根据HTTP请求头来锁定每一次HTTP请求；  \n    ⑧ rdp-cookie(name)，表示根据据cookie(name)来锁定并哈希每一次TCP请求。\n    \n\n<strong>Nginx和LVS对比的总结：</strong>\n\n1.  Nginx工作在网络的7层，所以它可以针对http应用本身来做分流策略，比如针对域名、目录结构等，相比之下LVS并不具备这样的功能，所以Nginx单凭这点可利用的场合就远多于LVS了；但Nginx有用的这些功能使其可调整度要高于LVS，所以经常要去触碰触碰，触碰多了，人为出问题的几率也就会大。\n    \n2.  Nginx对网络稳定性的依赖较小，理论上只要ping得通，网页访问正常，Nginx就能连得通，这是Nginx的一大优势！Nginx同时还能区分内外网，如果是同时拥有内外网的节点，就相当于单机拥有了备份线路；LVS就比较依赖于网络环境，目前来看服务器在同一网段内并且LVS使用direct方式分流，效果较能得到保证。另外注意，LVS需要向托管商至少申请多一个ip来做Visual IP，貌似是不能用本身的IP来做VIP的。要做好LVS管理员，确实得跟进学习很多有关网络通信方面的知识，就不再是一个HTTP那么简单了。\n    \n3.  Nginx安装和配置比较简单，测试起来也很方便，因为它基本能把错误用日志打印出来。LVS的安装和配置、测试就要花比较长的时间了；LVS对网络依赖比较大，很多时候不能配置成功都是因为网络问题而不是配置问题，出了问题要解决也相应的会麻烦得多。\n    \n4.  Nginx也同样能承受很高负载且稳定，但负载度和稳定度差LVS还有几个等级：Nginx处理所有流量所以受限于机器IO和配置；本身的bug也还是难以避免的。\n    \n5.  Nginx可以检测到服务器内部的故障，比如根据服务器处理网页返回的状态码、超时等等，并且会把返回错误的请求重新提交到另一个节点。目前LVS中 ldirectd也能支持针对服务器内部的情况来监控，但LVS的原理使其不能重发请求。比如用户正在上传一个文件，而处理该上传的节点刚好在上传过程中出现故障，Nginx会把上传切到另一台服务器重新处理，而LVS就直接断掉了，如果是上传一个很大的文件或者很重要的文件的话，用户可能会因此而恼火。\n    \n6.  Nginx对请求的异步处理可以帮助节点服务器减轻负载，假如使用 apache直接对外服务，那么出现很多的窄带链接时apache服务器将会占用大 量内存而不能释放，使用多一个Nginx做apache代理的话，这些窄带链接会被Nginx挡住，apache上就不会堆积过多的请求，这样就减少了相当多的资源占用。这点使用squid也有相同的作用，即使squid本身配置为不缓存，对apache还是有很大帮助的。\n    \n7.  Nginx能支持http、https和email（email的功能比较少用），LVS所支持的应用在这点上会比Nginx更多。在使用上，一般最前端所采取的策略应是LVS，也就是DNS的指向应为LVS均衡器，LVS的优点令它非常适合做这个任务。重要的ip地址，最好交由LVS托管，比如数据库的 ip、webservice服务器的ip等等，这些ip地址随着时间推移，使用面会越来越大，如果更换ip则故障会接踵而至。所以将这些重要ip交给 LVS托管是最为稳妥的，这样做的唯一缺点是需要的VIP数量会比较多。Nginx可作为LVS节点机器使用，一是可以利用Nginx的功能，二是可以利用Nginx的性能。当然这一层面也可以直接使用squid，squid的功能方面就比Nginx弱不少了，性能上也有所逊色于Nginx。Nginx也可作为中层代理使用，这一层面Nginx基本上无对手，唯一可以撼动Nginx的就只有lighttpd了，不过lighttpd目前还没有能做到 Nginx完全的功能，配置也不那么清晰易读。另外，中层代理的IP也是重要的，所以中层代理也拥有一个VIP和LVS是最完美的方案了。具体的应用还得具体分析，如果是比较小的网站（日PV小于1000万），用Nginx就完全可以了，如果机器也不少，可以用DNS轮询，LVS所耗费的机器还是比较多的；大型网站或者重要的服务，机器不发愁的时候，要多多考虑利用LVS。\n    \n\n<strong>现在对网络负载均衡的使用是随着网站规模的提升根据不同的阶段来使用不同的技术：</strong>\n\n第一阶段：利用Nginx或HAProxy进行单点的负载均衡，这一阶段服务器规模刚脱离开单服务器、单数据库的模式，需要一定的负载均衡，但是仍然规模较小没有专业的维护团队来进行维护，也没有需要进行大规模的网站部署。这样利用Nginx或HAproxy就是第一选择，此时这些东西上手快， 配置容易，在七层之上利用HTTP协议就可以。这时是第一选择。\n\n第二阶段：随着网络服务进一步扩大，这时单点的Nginx已经不能满足，这时使用LVS或者商用Array就是首要选择，Nginx此时就作为LVS或者Array的节点来使用，具体LVS或Array的是选择是根据公司规模和预算来选择，Array的应用交付功能非常强大，本人在某项目中使用过，性价比也远高于F5，商用首选，但是一般来说这阶段相关人才跟不上业务的提升，所以购买商业负载均衡已经成为了必经之路。\n\n第三阶段：这时网络服务已经成为主流产品，此时随着公司知名度也进一步扩展，相关人才的能力以及数量也随之提升，这时无论从开发适合自身产品的定制，以及降低成本来讲开源的LVS，已经成为首选，这时LVS会成为主流。\n\n最终形成比较理想的基本架构为：Array/LVS \u2014 Nginx/Haproxy \u2014 Squid/Varnish \u2014 AppServer</p>
+                        <div>
+                            ---------------------------------------------------------------</br>
+>>  博客地址：<a href="https://blog.mufengs.com" target="_blank">https://blog.mufengs.com</a></br>
+>>  邮箱地址：<a href=mailto:mufeng5619@gmail.com target="_blank">mufeng5619@gmail.com</a></br>
+>>  微信帐号：Do8080</br>
+>>    Github       :  <a href="https://github.com/mufengcoding" target="_blank">https://github.com/mufengcoding</a></br>
+---------------------------------------------------------------</br>
+                        </div>
+                </div>
+
+                <footer class="tags">
+                        <a class="tag" rel="tag" href="https://blog.mufengs.com/tags/B3log">
+                            B3log</a>
+
+                    <div class="rel fn-clear ft__center">
+                            <a href="https://blog.mufengs.com/articles/2018/10/19/1539915936370.html" rel="prev"
+                               class="fn-left vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="【倒计时 7 天】开放友情链接互连">
+                                旧一篇
+                            </a>
+<div class="article__share"
+     data-title="【网络】复习网络七层模型"
+     data-blogtitle="mufengs 的个人博客"
+     data-url="https://blog.mufengs.com/articles/2018/10/19/1539964901379.html"
+     data-avatar="https://img.hacpai.com/avatar/1522743072387_1529850525222.?imageView2/1/w/128/h/128/format/jpg/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>                            <a href="https://blog.mufengs.com/articles/2018/11/02/1541139674442.html" rel="next"
+                               class="fn-right vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="每周分享-第一期20181102">
+                                新一篇
+                            </a>
+                    </div>
+                </footer>
+                    <div id="b3logsolocomments"></div>
+                    <div id="vcomment" data-name="mufengcoding" data-postId="1539964901379"></div>
+                <br>
+                <div id="externalRelevantArticles" class="list"></div>
+                <div id="relevantArticles" class="list"></div>
+                <div id="randomArticles" class="list"></div>
+            </article>
+        </main>
+<aside>
+    <section>
+        <div class="ad vditor-reset">
+            
+
+<div >
+<p>服务器到期时间倒计时</p>
+<div id='etime'></div>
+</div>
+</br>
+<script>
+function clock(){
+var today=new Date(),//当前时间
+    h=today.getHours(),
+    m=today.getMinutes(),
+    s=today.getSeconds();
+  var stopTime=new Date("Nov 30 2020 00:00:00"),//结束时间
+    stopH=stopTime.getHours(),
+    stopM=stopTime.getMinutes(),
+    stopS=stopTime.getSeconds();
+  var shenyu=stopTime.getTime()-today.getTime(),//倒计时毫秒数
+    shengyuD=parseInt(shenyu/(60*60*24*1000)),//转换为天
+    D=parseInt(shenyu)-parseInt(shengyuD*60*60*24*1000),//除去天的毫秒数
+    shengyuH=parseInt(D/(60*60*1000)),//除去天的毫秒数转换成小时
+    H=D-shengyuH*60*60*1000,//除去天、小时的毫秒数
+    shengyuM=parseInt(H/(60*1000)),//除去天的毫秒数转换成分钟
+    M=H-shengyuM*60*1000;//除去天、小时、分的毫秒数
+    S=parseInt((shenyu-shengyuD*60*60*24*1000-shengyuH*60*60*1000-shengyuM*60*1000)/1000)//除去天、小时、分的毫秒数转化为秒
+    document.getElementById("etime").innerHTML=(shengyuD+"天"+shengyuH+"小时"+shengyuM+"分"+S+"秒"+"<br>");
+    // setTimeout("clock()",500);
+    setTimeout(clock,500);
+}
+clock()
+</script>
+<amp-auto-ads type="adsense"
+              data-ad-client="ca-pub-2020382208193428">
+</amp-auto-ads>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-2020382208193428"
+     data-ad-slot="4243963233"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<script type="application/javascript">
+function getgeoip(json){
+    document.write("访客IP: ", json.ip);
+    document.write("</br>所在国家: ", json.country);
+    document.write("</br>纬度: ", json.latitude);
+    document.write("</br>经度: ", json.longitude);
+}
+</script>
+<script type="application/javascript" src="https://api.ip.sb/geoip?callback=getgeoip"></script>
+        </div>
+
+
+        <div class="module">
+            <header><h2>标签</h2></header>
+            <main>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Python"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="19 篇文章">
+                        Python</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Docker"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="9 篇文章">
+                        Docker</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Solo"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="8 篇文章">
+                        Solo</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E8%BF%90%E7%BB%B4"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="7 篇文章">
+                        运维</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Linux"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="6 篇文章">
+                        Linux</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E7%94%9F%E6%B4%BB"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="6 篇文章">
+                        生活</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/B3log"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="6 篇文章">
+                        B3log</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Shell"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="5 篇文章">
+                        Shell</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E5%8E%9F%E5%88%9B"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="4 篇文章">
+                        原创</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E7%BF%BB%E8%AF%91"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="4 篇文章">
+                        翻译</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E5%A4%87%E4%BB%BD"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="4 篇文章">
+                        备份</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/CentOS"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="3 篇文章">
+                        CentOS</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Django"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="3 篇文章">
+                        Django</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/HTTPS"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="3 篇文章">
+                        HTTPS</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/GitHub"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="3 篇文章">
+                        GitHub</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E8%AE%A1%E5%88%92"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="2 篇文章">
+                        计划</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/Caddy"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="2 篇文章">
+                        Caddy</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E9%98%85%E8%AF%BB"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="2 篇文章">
+                        阅读</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E5%BE%85%E5%88%86%E7%B1%BB"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="2 篇文章">
+                        待分类</a>
+                    <a rel="tag"
+                       href="https://blog.mufengs.com/tags/%E6%97%85%E6%B8%B8"
+                       class="tag vditor-tooltipped vditor-tooltipped__n"
+                       aria-label="2 篇文章">
+                        旅游</a>
+            </main>
+        </div>
+
+        <div class="module meta">
+            <header>
+                <h2 class="ft__center">
+    <a href="https://hacpai.com/member/mufengcoding"
+       aria-label="https://hacpai.com/member/mufengcoding"
+       class="vditor-tooltipped__nw vditor-tooltipped  user__site"
+       target="_blank" rel="noopener nofollow">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path fill="#d23f31" style="fill: var(--color1, #d23f31)" d="M5.787 17.226h17.033l5.954 9.528c0.47 0.752 0.003 1.361-1.042 1.361h-15.141z"></path>
+            <path d="M10.74 3.927h17.033c1.045 0 1.512 0.609 1.042 1.361l-5.954 9.528h-19.872l6.379-10.209c0.235-0.376 0.849-0.681 1.372-0.681z"></path>
+            <path d="M2.953 17.226h2.839l6.804 10.889h-1.892c-0.523 0-1.137-0.305-1.372-0.681z"></path>
+        </svg>
+    </a>
+
+        <a href="https://github.com/mufengcoding"
+           aria-label="https://github.com/mufengcoding"
+           class="vditor-tooltipped__nw vditor-tooltipped  user__site"
+           target="_blank" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M16 0.331c-8.836 0-16 7.163-16 16 0 7.069 4.585 13.067 10.942 15.182 0.8 0.148 1.094-0.347 1.094-0.77 0-0.381-0.015-1.642-0.022-2.979-4.452 0.968-5.391-1.888-5.391-1.888-0.728-1.849-1.776-2.341-1.776-2.341-1.452-0.993 0.11-0.973 0.11-0.973 1.606 0.113 2.452 1.649 2.452 1.649 1.427 2.446 3.743 1.739 4.656 1.33 0.143-1.034 0.558-1.74 1.016-2.14-3.554-0.404-7.29-1.777-7.29-7.907 0-1.747 0.625-3.174 1.649-4.295-0.166-0.403-0.714-2.030 0.155-4.234 0 0 1.344-0.43 4.401 1.64 1.276-0.355 2.645-0.532 4.005-0.539 1.359 0.006 2.729 0.184 4.008 0.539 3.054-2.070 4.395-1.64 4.395-1.64 0.871 2.204 0.323 3.831 0.157 4.234 1.026 1.12 1.647 2.548 1.647 4.295 0 6.145-3.743 7.498-7.306 7.895 0.574 0.497 1.085 1.47 1.085 2.963 0 2.141-0.019 3.864-0.019 4.391 0 0.426 0.288 0.925 1.099 0.768 6.354-2.118 10.933-8.113 10.933-15.18 0-8.837-7.164-16-16-16z"></path>
+            </svg>
+        </a>
+
+        <a href="tencent://message/?uin=1126501575"
+           aria-label="1126501575"
+           target="_blank"
+           class="vditor-tooltipped__nw vditor-tooltipped  user__site" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M4.821 14.393c-0.125-0.304-0.143-0.607-0.143-0.929 0-0.5 0.321-1.304 0.625-1.679-0.018-0.464 0.179-1.411 0.536-1.714 0-3.304 2.554-7.464 5.536-8.893 1.839-0.875 3.768-1.179 5.786-1.179 1.571 0 3.286 0.375 4.75 0.982 4.196 1.768 5.143 5.054 6.036 9.25l0.018 0.089c0.518 0.786 0.982 1.714 0.982 2.679 0 0.482-0.321 0.964-0.321 1.393 0 0.036 0.107 0.179 0.125 0.214 1.536 2.268 2.929 4.732 2.929 7.554 0 0.625-0.339 2.804-1.339 2.804-0.696 0-1.464-1.696-1.714-2.161-0.018-0.018-0.036-0.018-0.054-0.018l-0.089 0.071c-0.571 1.482-1.196 2.875-2.357 3.982 1.018 0.982 2.661 0.893 2.964 2.589-0.089 0.196-0.054 0.411-0.196 0.607-1.018 1.536-3.75 1.732-5.393 1.732-2.179 0-3.946-0.571-6-1.179-0.429-0.125-1.071-0.054-1.536-0.107-1.089 1.196-3.75 1.518-5.286 1.518-1.357 0-6.607-0.089-6.607-2.411 0-1 0.214-1.286 0.911-1.929 0.554-0.107 0.964-0.411 1.607-0.446 0.089 0 0.161-0.018 0.25-0.036 0.018-0.018 0.036-0.018 0.036-0.071l-0.036-0.054c-1.232-0.286-2.964-3.393-3.232-4.679l-0.089-0.054c-0.125 0-0.179 0.268-0.214 0.357-0.393 0.911-1.321 1.893-2.357 2h-0.018c-0.143 0-0.089-0.143-0.196-0.179-0.25-0.589-0.411-1.125-0.411-1.786 0-3.571 1.714-6.214 4.5-8.321z"></path>
+            </svg>
+        </a>
+        <a href="javascript:void(0)"
+           class="vditor-tooltipped__nw vditor-tooltipped  user__site" aria-label="Do8080">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+            </svg>
+        </a>
+                </h2>
+            </header>
+            <main class="fn__clear">
+                <img src="https://img.hacpai.com/avatar/1522743072387_1529850525222.?imageView2/1/w/128/h/128/format/jpg/interlace/0/q/100" aria-label="mufengcoding"/>
+                <div class="fn-right">
+                    <a href="https://blog.mufengs.com/archives.html">
+                        94
+                        <span class="ft-gray">文章</span></a><br/>
+                    <span data-uvstaturl="https://blog.mufengs.com">38338</span> <span class="ft-gray">浏览</span>
+                    
+                </div>
+            </main>
+        </div>
+
+            <div class="module">
+                <header><h2>友情链接</h2></header>
+                <main>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://hacpai.com"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="黑客与画家的社区">
+                            黑客派</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://echocow.cn/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            EchoCow-lizhongyue248</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://laolees.github.io/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="个人博客">
+                            laolees的博客</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://fuyiyi.imdo.co/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="Birds love to hear herself sing!">
+                            张小妞的博客【Birds love to hear herself sing!】</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.fcblog.top/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="记录精彩的程序人生">
+                            fc 的个人博客</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.hjljy.cn"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="如野草般一岁一枯荣">
+                            海加尔金鹰【如野草般一岁一枯荣】</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.myylm.com"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            H【分享、海量人工淘宝优惠券】</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://nizouba.com"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            你走吧</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.chaiguanxin.com/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            此木【IT 码农】</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.xinke.org.cn/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            ECode1024</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.xhxblog.cn"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            水煮清蒸喵</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://88250.b3log.org/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            D大博客「我叫丁亮（Daniel/D/88250），是一名开源程序员，自由职业者。」</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://jiangck.com"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            昔洛 「 这不是一个 bug，这只是一个未列出来的特性。」</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.flyfun.site/"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            飞趣社区</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.zhxiong.com/?utm_source=hacpai.com"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="【直到以行，曲径以周】">
+                            张 雄 </a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://quickapp.lovejade.cn/ "
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="">
+                            静轩之别苑「晚晴幽草轩轩主」</a>
+                        <a rel="friend"
+                           target="_blank"
+                           href="https://www.xiahuhu.cn"
+                           class="tag vditor-tooltipped vditor-tooltipped__n"
+                           aria-label="关注网络安全">
+                            花生米's Blog  </a>
+                </main>
+            </div>
+
+            <div class="module">
+                <header><h2>存档</h2></header>
+                <main class="list">
+                    <ul>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2020/02"
+                                           title="2020 年 02 月(4)">
+                                            2020 年 02 月(4)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2020/01"
+                                           title="2020 年 01 月(6)">
+                                            2020 年 01 月(6)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/12"
+                                           title="2019 年 12 月(4)">
+                                            2019 年 12 月(4)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/11"
+                                           title="2019 年 11 月(5)">
+                                            2019 年 11 月(5)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/10"
+                                           title="2019 年 10 月(3)">
+                                            2019 年 10 月(3)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/09"
+                                           title="2019 年 09 月(3)">
+                                            2019 年 09 月(3)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/08"
+                                           title="2019 年 08 月(1)">
+                                            2019 年 08 月(1)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/07"
+                                           title="2019 年 07 月(8)">
+                                            2019 年 07 月(8)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/06"
+                                           title="2019 年 06 月(4)">
+                                            2019 年 06 月(4)</a>
+                                </li>
+                                <li>
+                                        <a href="https://blog.mufengs.com/archives/2019/05"
+                                           title="2019 年 05 月(5)">
+                                            2019 年 05 月(5)</a>
+                                </li>
+                            <li>
+                                <a href="https://blog.mufengs.com/archives.html">...</a>
+                            </li>
+                    </ul>
+                </main>
+            </div>
+
+    </section>
+</aside>
+    </div>
+</div>
+<footer class="footer fn-clear">
+    &copy; 2020
+    <a href="https://blog.mufengs.com">mufengs 的个人博客</a>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d1cd729cc56392a866f3afd3b3eed58";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+    <br/>
+    Powered by <a href="https://solo.b3log.org" target="_blank">Solo</a>
+    <span class="ft-warn">&heartsuit;</span>
+    Theme 9IPHP
+    <sup>[<a href="https://github.com/9IPHP/9IPHP" target="_blank">ref</a>]</sup>
+    by <a href="http://vanessa.b3log.org" target="_blank">Vanessa</a>
+</footer>
+<div class="icon-up" onclick="Util.goTop()"></div>
+<script>
+  var Label = {
+    servePath: "https://blog.mufengs.com",
+    staticServePath: "https://blog.mufengs.com",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "3.9.0",
+    staticSite: true,
+    showCodeBlockLn: true,
+  }
+</script>
+<script src="https://blog.mufengs.com/skins/9IPHP/js/common.min.js?1582365382210"></script>
+
+<script type="text/javascript">
+    Util.addScript('https://blog.mufengs.com/js/page.min.js?1582365382210', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论内容只能为 2 到 500 个字符！",
+        "oId": "1539964901379",
+        "blogHost": "https://blog.mufengs.com",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+    page.tips.externalRelevantArticlesDisplayCount = "5";
+        page.loadExternalRelevantArticles("B3log", "<header class='title'><h2>站外相关阅读</h2></header>");
+    Skin.initToc()
+    page.share()
+    });
+</script>
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 11ms, 2020/02/22 05:02:45 -->

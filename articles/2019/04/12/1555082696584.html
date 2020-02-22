@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>[翻译] 关于多线程的介绍 - mufengs 的个人博客</title><meta name="description" content="原文链接：https://www.internalpointers.com/post/gentle-introduction-multithreading 走近并发的世界，一步一个脚印 现代计算机能够同时执行多个操作。在硬件改进和更智能的操作系统的支持下，此功能使您的程序在执行速度和响应速度方面运行得更快。 编写利用这种功能的软件既迷人又棘手：它要求您了解计算机引擎盖下发生的情况。在第一集中，我将尝试划分线程的表面，这是操作系统提供的工具之一，以执行这种魔术。我们走吧！ 进程和线程：以正确的方式命名 现代操作系统可以同时运行多个程序。这就是为什么您可以在浏览器（程序）中阅读本文，同时在您的媒体播放器（另一个程序）上听音乐。每个程序都被称为正在执行的进程。操作系统知道许多软件技巧，以使进程与其他进程一起运行，并利用底层硬件。无论哪种方式，最终结果是您_感觉_所有程序同时运行。 在操作系统中运行进程不是同时执行多个操作的唯一方法。每个进程都能够在其自身内部同时执行子任务，称为线程。您可以将线程视为流程本身的一部分。每个进程在启动时至少触发一个线程，称为主线程。然后，根据程序/程序员的需要，...."/><meta property="og:description" content="原文链接：https://www.internalpointers.com/post/gentle-introduction-multithreading 走近并发的世界，一步一个脚印 现代计算机能够同时执行多个操作。在硬件改进和更智能的操作系统的支持下，此功能使您的程序在执行速度和响应速度方面运行得更快。 编写利用这种功能的软件既迷人又棘手：它要求您了解计算机引擎盖下发生的情况。在第一集中，我将尝试划分线程的表面，这是操作系统提供的工具之一，以执行这种魔术。我们走吧！ 进程和线程：以正确的方式命名 现代操作系统可以同时运行多个程序。这就是为什么您可以在浏览器（程序）中阅读本文，同时在您的媒体播放器（另一个程序）上听音乐。每个程序都被称为正在执行的进程。操作系统知道许多软件技巧，以使进程与其他进程一起运行，并利用底层硬件。无论哪种方式，最终结果是您_感觉_所有程序同时运行。 在操作系统中运行进程不是同时执行多个操作的唯一方法。每个进程都能够在其自身内部同时执行子任务，称为线程。您可以将线程视为流程本身的一部分。每个进程在启动时至少触发一个线程，称为主线程。然后，根据程序/程序员的需要，...."/>    <meta name="keywords" content="mfuengs,沐风,Solo,博客,开源"/><link rel="dns-prefetch" href="https://mufengcoding.github.io"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://mufengcoding.github.io"><link rel="icon" type="image/png" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="apple-touch-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><link rel="shortcut icon" type="image/x-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="[翻译] 关于多线程的介绍 - mufengs 的个人博客"/><meta property="og:site_name" content="mufengs 的个人博客"/><meta property="og:url"      content="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html?"/><meta property="og:image" content="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="search" type="application/opensearchdescription+xml" title="[翻译] 关于多线程的介绍 - mufengs 的个人博客" href="/opensearch.xml"><link href="https://mufengcoding.github.io/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://mufengcoding.github.io/manifest.json">        <link rel="canonical" href="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html">        <link rel="stylesheet"
+              href="https://mufengcoding.github.io/skins/9IPHP/css/base.css?1582365382210"/>
+            <link rel="prev" title="[翻译] 再见 docker" href="https://mufengcoding.github.io/articles/2019/04/12/1555082010229.html">
+            <link rel="next" title="vsc server 搭建实战" href="https://mufengcoding.github.io/articles/2019/04/21/1555853363410.html">
+    <meta name="chinaz-site-verification" content="F660A6FCE0996EE8">
+<meta name="msvalidate.01" content="17F5C77D3C4574E00E1184C8C88CDF3D" />
+
+<meta name="baidu-site-verification" content="O2dbWwPD4c" />
+<meta http-equiv="Content-Language" contect="zh-CN">
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2020382208193428",
+    enable_page_level_ads: true
+  });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129717363-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-129717363-1');
+</script>
+<meta name="baidu-site-verification" content="EVS4zXFLDE" /></head>
+<body>
+<header>
+    <div class="banner">
+        <div class="fn-clear wrapper">
+            <h1 class="fn-inline">
+                <a href="https://mufengcoding.github.io" rel="start">
+                    mufengs 的个人博客
+                </a>
+            </h1>
+            <small> &nbsp; 没有引发任何行动的思想都不是思想，而是梦想。 —— 马丁</small>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="fn-clear wrapper">
+            <nav class="fn-left">
+                <a href="https://mufengcoding.github.io">
+                    <i class="icon-home"></i>
+                    首页
+                </a>
+                    <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                        <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                    </a>
+                    <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                        <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                    </a>
+                    <a href="https://www.opschina.top/" target="_self" rel="section">
+                        <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                    </a>
+                    <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                        <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                    </a>
+                    <a href="/my-github-repos" target="_self" rel="section">
+                        <img class="page-icon" src="/images/github-icon.png">我的开源
+                    </a>
+                <a href="https://mufengcoding.github.io/tags.html" rel="section">
+                    <i class="icon-tags"></i> 标签墙
+                </a>
+                <a href="https://mufengcoding.github.io/archives.html">
+                    <i class="icon-inbox"></i> 存档
+                </a>
+                <a rel="archive" href="https://mufengcoding.github.io/links.html">
+                    <i class="icon-link"></i> 友情链接
+                </a>
+                <a rel="alternate" href="https://mufengcoding.github.io/rss.xml" rel="section">
+                    <i class="icon-rss"></i> RSS
+                </a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="responsive fn-none">
+    <i class="icon-list"></i>
+    <ul class="list">
+        <li>
+            <a href="https://mufengcoding.github.io">
+                <i class="icon-home"></i>
+                首页
+            </a>
+        </li>
+            <li>
+                <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                    <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                    <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                </a>
+            </li>
+            <li>
+                <a href="https://www.opschina.top/" target="_self" rel="section">
+                    <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                </a>
+            </li>
+            <li>
+                <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                    <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                </a>
+            </li>
+            <li>
+                <a href="/my-github-repos" target="_self" rel="section">
+                    <img class="page-icon" src="/images/github-icon.png">我的开源
+                </a>
+            </li>
+        <li>
+            <a href="https://mufengcoding.github.io/tags.html" rel="section">
+                <i class="icon-tags"></i> 标签墙
+            </a>
+        </li>
+        <li>
+            <a href="https://mufengcoding.github.io/archives.html">
+                <i class="icon-inbox"></i> 存档
+            </a>
+        </li>
+        <li>
+            <a rel="archive" href="https://mufengcoding.github.io/links.html">
+                <i class="icon-link"></i> 友情链接
+            </a>
+        </li>
+        <li>
+            <a rel="alternate" href="https://mufengcoding.github.io/rss.xml" rel="section">
+                <i class="icon-rss"></i> RSS
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="wrapper">
+    <div class="main-wrap">
+        <main>
+            <article class="post">
+                <header>
+                    <h2>
+                        <a rel="bookmark" href="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html">
+                            [翻译] 关于多线程的介绍
+                        </a>
+                    </h2>
+                    <div class="meta">
+                                <span class="vditor-tooltipped vditor-tooltipped__n"
+                                      aria-label="创建日期">
+                                    <i class="icon-date"></i>
+                                    <time>
+                                    2019-04-12
+                                    </time>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="评论数">
+                                    <i class="icon-comments"></i>
+                                    <a href="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html#b3logsolocomments">
+                                        <span data-uvstatcmt="1555082696584">0</span> 评论</a>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="浏览数">
+                                    <i class="icon-views"></i>
+                        <span data-uvstaturl="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html">226</span> 浏览
+                                </span>
+                    </div>
+                </header>
+
+                <div class="vditor-reset post__content">
+                    <p>原文链接：<a href="https://www.internalpointers.com/post/gentle-introduction-multithreading" target="_blank">https://www.internalpointers.com/post/gentle-introduction-multithreading</a></p>
+<p>走近并发的世界，一步一个脚印</p>
+<p>现代计算机能够同时执行多个操作。在硬件改进和更智能的操作系统的支持下，此功能使您的程序在执行速度和响应速度方面运行得更快。</p>
+<p>编写利用这种功能的软件既迷人又棘手：它要求您了解计算机引擎盖下发生的情况。在第一集中，我将尝试划分<strong>线程</strong>的表面，这是操作系统提供的工具之一，以执行这种魔术。我们走吧！</p>
+<h2 id="toc_h2_0">进程和线程：以正确的方式命名</h2>
+<p>现代操作系统可以同时运行多个程序。这就是为什么您可以在浏览器（程序）中阅读本文，同时在您的媒体播放器（另一个程序）上听音乐。每个程序都被称为正在执行的<strong>进程</strong>。操作系统知道许多软件技巧，以使进程与其他进程一起运行，并利用底层硬件。无论哪种方式，最终结果是您_感觉_所有程序同时运行。</p>
+<p>在操作系统中运行进程不是同时执行多个操作的唯一方法。每个进程都能够在其自身内部同时执行子任务，称为<strong>线程</strong>。您可以将线程视为流程本身的一部分。每个进程在启动时至少触发一个线程，称为<strong>主线程</strong>。然后，根据程序/程序员的需要，可以启动或终止其他线程。<strong>多线程</strong>是关于在单个进程中运行多个线程。</p>
+<p>例如，您的媒体播放器可能会运行多个线程：一个用于呈现界面 - 这通常是主线程，另一个用于播放音乐，等等。</p>
+<p>您可以将操作系统视为包含多个进程的容器，其中每个进程都是一个容纳多个线程的容器。在本文中，我将仅关注线程，但整个主题非常吸引人，并且值得在未来进行更深入的分析。</p>
+<p><img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/processes-threads.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="进程与线程"></p>
+<p>1.操作系统可以看作是包含进程的框，进程又包含一个或多个线程。</p>
+<h3 id="toc_h3_1">进程和线程之间的差异</h3>
+<p>每个进程都有自己的操作系统分配的内存块。默认情况下，内存无法与其他进程共享：您的浏览器无法访问分配给您的媒体播放器的内存，反之亦然。如果您运行同一进程的两个<strong>实例</strong>，即两次启动浏览器，则会发生同样的情况。操作系统将每个实例视为一个新进程，并分配了自己独立的内存部分。因此，默认情况下，两个或多个进程无法共享数据，除非它们执行高级技巧 - 即所谓**<a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank">的进程间通信（IPC）</a>**。</p>
+<p>与进程不同，线程共享由操作系统分配给其父进程的相同内存块：媒体播放器主界面中的数据可以由音频引擎轻松访问，反之亦然。因此，两个线程更容易相互通信。最重要的是，线程通常比进程更轻：它们占用的资源更少，创建速度更快，这就是为什么它们也被称为<strong>轻量级进程</strong>。</p>
+<p>线程是使程序同时执行多个操作的便捷方式。如果没有线程，则必须为每个任务编写一个程序，将它们作为进程运行并通过操作系统进行同步。这将更加困难（IPC很棘手）而且速度较慢（流程比线程更重）。</p>
+<h3 id="toc_h3_2">绿色线，纤维</h3>
+<p>到目前为止提到的线程是操作系统的事情：想要触发新线程的进程必须与操作系统通信。但并非每个平台本身都支持线程。<strong>绿色线程</strong>（也称为**光纤）**是一种仿真，它使多线程程序在不提供该功能的环境中工作。例如，如果底层操作系统没有本机线程支持，则虚拟机可能会实现绿色线程。</p>
+<p>绿色线程的创建和管理速度更快，因为它们完全绕过操作系统，但也有缺点。我会在下一集中写下这个话题。</p>
+<p>“绿色线程”这个名称是指Sun Microsystem的Green Team，它在90年代设计了原始的Java线程库。今天Java不再使用绿色线程：它们在2000年转向本地线程。其他一些编程语言 - Go，Haskell或Rust等等 - 实现等效的绿色线程而不是本机线程。</p>
+<h2 id="toc_h2_3">使用什么线程</h2>
+<p>为什么进程应该使用多个线程？正如我之前提到的，并行处理可以大大加快速度。假设您要在电影编辑器中渲染电影。编辑器可以足够聪明，可以跨多个线程传播渲染操作，每个线程处理最终影片的一大块。因此，如果使用一个线程，任务将花费一个小时，两个线程需要30分钟;用四个线程15分钟，依此类推。</p>
+<p>它真的那么简单吗？有三个要点需要考虑：</p>
+<ol>
+<li>并非每个程序都需要多线程。如果您的应用程序执行顺序操作或经常等待用户执行某些操作，多线程可能不是那么有用;</li>
+<li>你只是不向应用程序抛出更多线程以使其运行更快：每个子任务都必须仔细考虑和设计以执行并行操作;</li>
+<li>并非100％保证线程将真正并行执行其操作，<em>同时</em>：它实际上取决于底层硬件。</li>
+</ol>
+<p>最后一个是至关重要的：如果您的计算机不同时支持多个操作，操作系统必须伪造它们。我们将在一分钟内看到。现在让我们将<strong>并发</strong>视为<strong>同时</strong>运行任务的_感知_，而将<strong>真正的并行</strong>视为同时运行的任务。</p>
+<p><img src="https://raw.githubusercontent.com/monocasual/internalpointers-files/master/2019/02/concurrency-parallelism.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt="并发与并行"></p>
+<p>并行性是并发的一个子集。</p>
+<h2 id="toc_h2_4">什么使并发和并行成为可能</h2>
+<p>在<strong>中央处理单元（CPU）<strong>在您的电脑上运行的程序的辛勤工作。它由几个部分组成，主要部分是所谓的</strong>核心</strong>：即实际执行计算的地方。核心一次只能运行一个操作。</p>
+<p>这当然是一个主要缺点。出于这个原因，操作系统开发了先进的技术，使用户能够同时运行多个进程（或线程），尤其是在图形环境中，甚至在单个核心机器上。最重要的一种叫做<strong>抢占式多任务处理</strong>，<strong>抢占</strong>是指中断任务，切换到另一个任务然后在以后恢复第一个任务的能力。</p>
+<p>因此，如果您的CPU只有一个核心，那么操作系统的一部分工作就是将该单核心计算能力分散到多个进程或线程中，这些进程或线程在一个循环中一个接一个地执行。这个操作让你觉得有多个程序并行运行，或者一个程序同时执行多个程序（如果是多线程的）。并发性得到满足，但真正的并行性 -_同时_运行进程的能力- 仍然缺失。</p>
+<p>如今，现代CPU在引擎盖下有多个核心，每个核心一次执行独立操作。这意味着使用两个或更多内核可以实现真正的并行性。例如，我的英特尔酷睿i7有四个内核：它可以同时运行四个不同的进程或线程。</p>
+<p>操作系统能够检测CPU核心的数量，并为每个核心分配进程或线程。线程可以分配给操作系统喜欢的任何核心，并且这种调度对于正在运行的程序是完全透明的。此外，如果所有内核都忙，可以启动抢占式多任务处理。这使您能够运行比计算机中可用的实际数量或核心数更多的进程和线程。</p>
+<h3 id="toc_h3_5">单核上的多线程应用程序：它有意义吗？</h3>
+<p>单核机器上的真正并行性是不可能实现的。然而，如果您的应用程序可以从中受益，那么编写多线程程序仍然是有意义的。当进程使用多个线程时，即使其中一个线程执行缓慢或阻塞任务，抢占式多任务也可以使应用程序保持运行。</p>
+<p>比如说你正在开发一个从非常慢的磁盘读取一些数据的桌面应用程序。如果只用一个线程编写程序，整个应用程序将冻结，直到磁盘操作完成：分配给唯一线程的CPU功率在等待磁盘唤醒时被浪费。当然，操作系统除此之外还运行许多其他进程，但您的特定应用程序将不会取得任何进展。</p>
+<p>让我们以多线程的方式重新思考您的应用。线程A负责磁盘访问，而线程B负责主接口。如果线程A由于设备运行缓慢而等待，则线程B仍然可以运行主界面，从而使程序保持响应。这是可能的，因为有两个线程，操作系统可以在它们之间切换CPU资源而不会卡在较慢的线程上。</p>
+<h2 id="toc_h2_6">更多线程，更多问题</h2>
+<p>众所周知，线程共享其父进程的相同内存块。这使得它们中的两个或更多个在同一应用程序内交换数据非常容易。例如：电影编辑器可能包含大部分包含视频时间轴的共享内存。这些共享内存正被指定用于将电影渲染到文件的几个工作线程读取。它们都只需要一个指向该存储区的句柄（例如指针），以便从中读取并将渲染帧输出到磁盘。</p>
+<p>只要两个或多个线程从同一个内存位置_读取_，事情就会顺利进行。当至少其中一个人_写入_共享内存时，其他人正在从中读取问题。此时可能会出现两个问题：</p>
+<ul>
+<li>
+<p><strong>数据争用</strong>- 当编写器线程修改内存时，读者线程可能正在读取它。如果作者尚未完成其工作，读者将获得损坏的数据;</p>
+</li>
+<li>
+<p><strong>竞争条件</strong>- 读者线程只有在作者写完后才能读取。如果相反的情况怎么办？比数据竞争更微妙，竞争条件是关于两个或更多线程以不可预测的顺序执行其工作，而实际上操作应该以正确的顺序执行以正确完成。您的程序即使受到数据竞争保护也可以触发竞争条件。</p>
+</li>
+</ul>
+<h3 id="toc_h3_7">线程安全的概念</h3>
+<p>如果一段代码正常工作，即没有数据竞争或竞争条件，即使许多线程同时执行它，也会说它是<strong>线程安全的</strong>。您可能已经注意到某些编程库声明自己是线程安全的：如果您正在编写多线程程序，则需要确保可以跨不同线程使用任何其他第三方函数，而不会触发并发问题。</p>
+<h2 id="toc_h2_8">数据竞争的根本原因</h2>
+<p>我们知道CPU核心一次只能执行一条机器指令。这样的指令被认为是**原子的，**因为它是不可分割的：它不能分解成更小的操作。希腊语“atom”（ἄτομος; atomos）意味着_不可切割_。</p>
+<p>不可分割的属性使原子操作本质上是线程安全的。当线程对共享数据执行原子写入时，没有其他线程可以读取修改半完成。相反，当线程对共享数据执行原子读取时，它会读取单个时刻出现的整个值。线程无法_通过_原子操作，因此不会发生数据争用。</p>
+<p>坏消息是绝大多数的操作都是非原子的。即使像<code>x = 1</code>某些硬件上那样的微不足道的任务也可能由多个原子机器指令组成，这使得赋值本身就是非原子的。因此，如果线程读取<code>x</code>而另一个线程执行分配，则会触发数据争用。</p>
+<h2 id="toc_h2_9">种族条件的根本原因</h2>
+<p>抢占式多任务处理使操作系统可以完全控制线程管理：它可以根据高级调度算法启动，停止和暂停线程。您作为程序员无法控制执行的时间或顺序。实际上，无法保证像这样的简单代码：</p>
+<pre><code>writer_thread.start()
+reader_thread.start() 
+</code></pre>
+<p>将按特定顺序启动两个线程。多次运行此程序，您将注意到每次运行时它的行为方式如何：有时候编写器线程首先启动，有时候读者会这样做。如果您的程序需要编写器始终在读者之前运行，您肯定会遇到竞争状态。</p>
+<p>此行为称为<strong>非确定性</strong>：结果每次都会更改，您无法预测。受竞争条件影响的调试程序非常烦人，因为您无法始终以受控方式重现问题。</p>
+<h2 id="toc_h2_10">教导线程相处：并发控制</h2>
+<p>数据竞赛和竞争条件都是现实世界的问题：有些人甚至<a href="https://en.wikipedia.org/wiki/Therac-25" target="_blank">因为他们而死亡</a>。容纳两个或多个并发线程的技术称为<strong>并发控制</strong>：操作系统和编程语言提供了几种解决方案来处理它。最重要的是：</p>
+<ul>
+<li>
+<p><strong>同步</strong>- 一种确保资源一次只能由一个线程使用的方法。同步是将代码的特定部分标记为“受保护”，以便两个或多个并发线程不会同时执行它，从而搞砸了共享数据;</p>
+</li>
+<li>
+<p><strong>原子操作</strong>- 由于操作系统提供的特殊指令，一堆非原子操作（如之前提到的赋值）可以转换为原子操作。这样，无论其他线程如何访问共享数据，共享数据始终保持有效状态;</p>
+</li>
+<li>
+<p><strong>不可变数据</strong>- 共享数据被标记为不可变，没有任何东西可以改变它：只允许线程从中读取，消除了根本原因。我们知道线程可以安全地从相同的内存位置读取，只要它们不修改它。这是<a href="https://en.wikipedia.org/wiki/Functional_programming" target="_blank">函数式编程</a>背后的主要哲学。</p>
+</li>
+</ul>
+<p>我将在这个关于并发的迷你系列的下一集中介绍所有这些引人入胜的主题。敬请关注！</p>
+<h2 id="toc_h2_11">参考文献</h2>
+<p>8 bit avenue-<a href="https://www.8bitavenue.com/difference-between-multiprogramming-multitasking-multithreading-and-multiprocessing/" target="_blank">多道，多任务，多线程和多处理之间的区别</a><br>
+维基百科-<a href="https://en.wikipedia.org/wiki/Inter-process_communication" target="_blank">进程间通信</a><br>
+维基百科-<a href="https://en.wikipedia.org/wiki/Process_%28computing%29" target="_blank">处理（计算）</a><br>
+维基百科-<a href="https://en.wikipedia.org/wiki/Concurrency_%28computer_science%29" target="_blank">并发（计算机科学）</a><br>
+维基百科-<a href="https://en.wikipedia.org/wiki/Parallel_computing" target="_blank">并行计算</a><br>
+维基百科-<a href="https://en.wikipedia.org/wiki/Multithreading_%28computer_architecture%29" target="_blank">多线程（计算机体系结构）</a><br>
+＃1 -<a href="https://stackoverflow.com/questions/1713554/threads-processes-vs-multithreading-multicore-multiprocessor-how-they-are" target="_blank">线程＆进程Vs的多线程＆Multi-Core / MultiProcessor：它们是如何映射的？</a><br>
+Stackoverflow -<a href="https://stackoverflow.com/questions/19225859/difference-between-core-and-processor" target="_blank">核心和处理器之间的区别？</a><br>
+维基百科 -<a href="https://en.wikipedia.org/wiki/Thread_%28computing%29" target="_blank">线程（计算）</a><br>
+维基百科 -<a href="https://en.wikipedia.org/wiki/Computer_multitasking" target="_blank">计算机多任务</a><br>
+Ibm.com -<a href="https://www.ibm.com/support/knowledgecenter/en/ssw_aix_71/com.ibm.aix.genprogc/benefits_threads.htm" target="_blank">线程的好处</a><br>
+Haskell.org -<a href="https://wiki.haskell.org/Parallelism_vs._Concurrency" target="_blank">并行性与并发</a><br>
+Stackoverflow -<a href="https://stackoverflow.com/questions/16116952/can-multithreading-be-implemented-on-a-single-processor-system" target="_blank">可以在单个处理器系统上实现多线程吗？</a><br>
+HowToGeek -<a href="https://www.howtogeek.com/194756/cpu-basics-multiple-cpus-cores-and-hyper-threading-explained/" target="_blank">CPU基础：多CPU，内核和超线程介绍</a><br>
+Oracle.com -<a href="https://docs.oracle.com/cd/E19205-01/820-0619/geojs/index.html" target="_blank">1.2什么是数据竞争？</a><br>
+Jaka的角落 -<a href="http://jakascorner.com/blog/2016/01/data-races.html" target="_blank">数据竞赛和互斥体</a><br>
+维基百科 -<a href="https://en.wikipedia.org/wiki/Thread_safety" target="_blank">线程安全</a><br>
+Preshing on Programming -<a href="https://preshing.com/20130618/atomic-vs-non-atomic-operations/" target="_blank">原子与非原子操作</a><br>
+维基百科 -<a href="https://en.wikipedia.org/wiki/Green_threads" target="_blank">绿色线程</a></p>
+                        <div>
+                            ---------------------------------------------------------------</br>
+>>  博客地址：<a href="https://blog.mufengs.com" target="_blank">https://blog.mufengs.com</a></br>
+>>  邮箱地址：<a href=mailto:mufeng5619@gmail.com target="_blank">mufeng5619@gmail.com</a></br>
+>>  微信帐号：Do8080</br>
+>>    Github       :  <a href="https://github.com/mufengcoding" target="_blank">https://github.com/mufengcoding</a></br>
+---------------------------------------------------------------</br>
+                        </div>
+                </div>
+
+                <footer class="tags">
+                        <a class="tag" rel="tag" href="https://mufengcoding.github.io/tags/%E7%BF%BB%E8%AF%91">
+                            翻译</a>
+
+                    <div class="rel fn-clear ft__center">
+                            <a href="https://mufengcoding.github.io/articles/2019/04/12/1555082010229.html" rel="prev"
+                               class="fn-left vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="[翻译] 再见 docker">
+                                旧一篇
+                            </a>
+<div class="article__share"
+     data-title="[翻译] 关于多线程的介绍"
+     data-blogtitle="mufengs 的个人博客"
+     data-url="https://mufengcoding.github.io/articles/2019/04/12/1555082696584.html"
+     data-avatar="https://img.hacpai.com/avatar/1522743072387_1529850525222.?imageView2/1/w/128/h/128/format/jpg/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>                            <a href="https://mufengcoding.github.io/articles/2019/04/21/1555853363410.html" rel="next"
+                               class="fn-right vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="vsc server 搭建实战">
+                                新一篇
+                            </a>
+                    </div>
+                </footer>
+                    <div id="b3logsolocomments"></div>
+                    <div id="vcomment" data-name="mufengcoding" data-postId="1555082696584"></div>
+                <br>
+                <div id="externalRelevantArticles" class="list"></div>
+                <div id="relevantArticles" class="list"></div>
+                <div id="randomArticles" class="list"></div>
+            </article>
+        </main>
+<aside>
+<ul class="article__toc">
+        <li class="toc__h2">
+            <a href="#toc_h2_0">进程和线程：以正确的方式命名</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_1">进程和线程之间的差异</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_2">绿色线，纤维</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_3">使用什么线程</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_4">什么使并发和并行成为可能</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_5">单核上的多线程应用程序：它有意义吗？</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_6">更多线程，更多问题</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_7">线程安全的概念</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_8">数据竞争的根本原因</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_9">种族条件的根本原因</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_10">教导线程相处：并发控制</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_11">参考文献</a>
+        </li>
+</ul></aside>
+    </div>
+</div>
+<footer class="footer fn-clear">
+    &copy; 2020
+    <a href="https://mufengcoding.github.io">mufengs 的个人博客</a>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d1cd729cc56392a866f3afd3b3eed58";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+    <br/>
+    Powered by <a href="https://solo.b3log.org" target="_blank">Solo</a>
+    <span class="ft-warn">&heartsuit;</span>
+    Theme 9IPHP
+    <sup>[<a href="https://github.com/9IPHP/9IPHP" target="_blank">ref</a>]</sup>
+    by <a href="http://vanessa.b3log.org" target="_blank">Vanessa</a>
+</footer>
+<div class="icon-up" onclick="Util.goTop()"></div>
+<script>
+  var Label = {
+    servePath: "https://mufengcoding.github.io",
+    staticServePath: "https://mufengcoding.github.io",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "3.9.0",
+    staticSite: true,
+    showCodeBlockLn: true,
+  }
+</script>
+<script src="https://mufengcoding.github.io/skins/9IPHP/js/common.min.js?1582365382210"></script>
+
+<script type="text/javascript">
+    Util.addScript('https://mufengcoding.github.io/js/page.min.js?1582365382210', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论内容只能为 2 到 500 个字符！",
+        "oId": "1555082696584",
+        "blogHost": "https://mufengcoding.github.io",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+    page.tips.externalRelevantArticlesDisplayCount = "5";
+        page.loadExternalRelevantArticles("翻译", "<header class='title'><h2>站外相关阅读</h2></header>");
+    Skin.initToc()
+    page.share()
+    });
+</script>
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 17ms, 2020/02/22 05:02:44 -->

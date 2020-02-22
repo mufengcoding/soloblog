@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>[翻译] 是的，Python 很慢，我不关心 - mufengs 的个人博客</title><meta name="description" content="原文链接：https://hackernoon.com/yes-python-is-slow-and-i-dont-care-13763980b5a1 我正在讨论关于Python中的asyncio的讨论，以谈谈我最近想到的一些事情：Python的速度。对于那些不知道的人，我有点像Python粉丝，我尽我所能积极地使用Python。人们对Python的最大抱怨之一就是它很慢。有些人几乎拒绝尝试python，因为它比X慢。这是我的想法为什么你应该尝试python，尽管它很慢。 速度不再重要 过去，程序需要很长时间才能运行。CPU价格昂贵，内存昂贵。程序的运行时间曾经是一个重要的指标。计算机非常昂贵，运行它们的电力也是如此。由于永恒的商业法，优化了这些资源： 优化您最昂贵的资源。 从历史上看，最昂贵的资源是计算机运行时间。这导致了计算机科学的研究，其关注于不同算法的效率。然而，这已不再适用，因为硅现在很便宜。就像真便宜。运行时间不再是您最昂贵的资源。公司最昂贵的资源现在是员工的时间。或者换句话说，你。完成任务比让它快速完成更重要。事实上，这是非常重要的，我将把它再次放在这里，好像它是一...."/><meta property="og:description" content="原文链接：https://hackernoon.com/yes-python-is-slow-and-i-dont-care-13763980b5a1 我正在讨论关于Python中的asyncio的讨论，以谈谈我最近想到的一些事情：Python的速度。对于那些不知道的人，我有点像Python粉丝，我尽我所能积极地使用Python。人们对Python的最大抱怨之一就是它很慢。有些人几乎拒绝尝试python，因为它比X慢。这是我的想法为什么你应该尝试python，尽管它很慢。 速度不再重要 过去，程序需要很长时间才能运行。CPU价格昂贵，内存昂贵。程序的运行时间曾经是一个重要的指标。计算机非常昂贵，运行它们的电力也是如此。由于永恒的商业法，优化了这些资源： 优化您最昂贵的资源。 从历史上看，最昂贵的资源是计算机运行时间。这导致了计算机科学的研究，其关注于不同算法的效率。然而，这已不再适用，因为硅现在很便宜。就像真便宜。运行时间不再是您最昂贵的资源。公司最昂贵的资源现在是员工的时间。或者换句话说，你。完成任务比让它快速完成更重要。事实上，这是非常重要的，我将把它再次放在这里，好像它是一...."/>    <meta name="keywords" content="mfuengs,沐风,Solo,博客,开源"/><link rel="dns-prefetch" href="https://blog.mufengs.com"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://blog.mufengs.com"><link rel="icon" type="image/png" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="apple-touch-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><link rel="shortcut icon" type="image/x-icon" href="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="[翻译] 是的，Python 很慢，我不关心 - mufengs 的个人博客"/><meta property="og:site_name" content="mufengs 的个人博客"/><meta property="og:url"      content="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html?"/><meta property="og:image" content="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4"/><link rel="search" type="application/opensearchdescription+xml" title="[翻译] 是的，Python 很慢，我不关心 - mufengs 的个人博客" href="/opensearch.xml"><link href="https://blog.mufengs.com/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://blog.mufengs.com/manifest.json">        <link rel="canonical" href="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html">        <link rel="stylesheet"
+              href="https://blog.mufengs.com/skins/9IPHP/css/base.css?1582365382210"/>
+            <link rel="prev" title="[翻译] 为什么 Python 这么慢？" href="https://blog.mufengs.com/articles/2019/01/04/1546579369101.html">
+            <link rel="next" title="docker 容器之间互联" href="https://blog.mufengs.com/articles/2019/01/05/1546703605353.html">
+    <meta name="chinaz-site-verification" content="F660A6FCE0996EE8">
+<meta name="msvalidate.01" content="17F5C77D3C4574E00E1184C8C88CDF3D" />
+
+<meta name="baidu-site-verification" content="O2dbWwPD4c" />
+<meta http-equiv="Content-Language" contect="zh-CN">
+<script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-2020382208193428",
+    enable_page_level_ads: true
+  });
+</script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129717363-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-129717363-1');
+</script>
+<meta name="baidu-site-verification" content="EVS4zXFLDE" /></head>
+<body>
+<header>
+    <div class="banner">
+        <div class="fn-clear wrapper">
+            <h1 class="fn-inline">
+                <a href="https://blog.mufengs.com" rel="start">
+                    mufengs 的个人博客
+                </a>
+            </h1>
+            <small> &nbsp; 没有引发任何行动的思想都不是思想，而是梦想。 —— 马丁</small>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <div class="fn-clear wrapper">
+            <nav class="fn-left">
+                <a href="https://blog.mufengs.com">
+                    <i class="icon-home"></i>
+                    首页
+                </a>
+                    <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                        <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                    </a>
+                    <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                        <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                    </a>
+                    <a href="https://www.opschina.top/" target="_self" rel="section">
+                        <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                    </a>
+                    <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                        <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                    </a>
+                    <a href="/my-github-repos" target="_self" rel="section">
+                        <img class="page-icon" src="/images/github-icon.png">我的开源
+                    </a>
+                <a href="https://blog.mufengs.com/tags.html" rel="section">
+                    <i class="icon-tags"></i> 标签墙
+                </a>
+                <a href="https://blog.mufengs.com/archives.html">
+                    <i class="icon-inbox"></i> 存档
+                </a>
+                <a rel="archive" href="https://blog.mufengs.com/links.html">
+                    <i class="icon-link"></i> 友情链接
+                </a>
+                <a rel="alternate" href="https://blog.mufengs.com/rss.xml" rel="section">
+                    <i class="icon-rss"></i> RSS
+                </a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="responsive fn-none">
+    <i class="icon-list"></i>
+    <ul class="list">
+        <li>
+            <a href="https://blog.mufengs.com">
+                <i class="icon-home"></i>
+                首页
+            </a>
+        </li>
+            <li>
+                <a href="https://my.oschina.net/mfeng" target="_blank" rel="section">
+                    <img class="page-icon" src="https://static.oschina.net/new-osc/img/logo.svg">oschina
+                </a>
+            </li>
+            <li>
+                <a href="https://blog.51cto.com/10556365" target="_blank" rel="section">
+                    <img class="page-icon" src="https://google.mufengs.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png">51CTO博客
+                </a>
+            </li>
+            <li>
+                <a href="https://www.opschina.top/" target="_self" rel="section">
+                    <img class="page-icon" src="https://avatars0.githubusercontent.com/u/13534743?s=460&v=4">运维中国
+                </a>
+            </li>
+            <li>
+                <a href="https://www.cnblogs.com/sunofwe/" target="_self" rel="section">
+                    <img class="page-icon" src="https://www.cnblogs.com/Skins/custom/images/logo.gif">博客园
+                </a>
+            </li>
+            <li>
+                <a href="/my-github-repos" target="_self" rel="section">
+                    <img class="page-icon" src="/images/github-icon.png">我的开源
+                </a>
+            </li>
+        <li>
+            <a href="https://blog.mufengs.com/tags.html" rel="section">
+                <i class="icon-tags"></i> 标签墙
+            </a>
+        </li>
+        <li>
+            <a href="https://blog.mufengs.com/archives.html">
+                <i class="icon-inbox"></i> 存档
+            </a>
+        </li>
+        <li>
+            <a rel="archive" href="https://blog.mufengs.com/links.html">
+                <i class="icon-link"></i> 友情链接
+            </a>
+        </li>
+        <li>
+            <a rel="alternate" href="https://blog.mufengs.com/rss.xml" rel="section">
+                <i class="icon-rss"></i> RSS
+            </a>
+        </li>
+    </ul>
+</div>
+<div class="wrapper">
+    <div class="main-wrap">
+        <main>
+            <article class="post">
+                <header>
+                    <h2>
+                        <a rel="bookmark" href="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html">
+                            [翻译] 是的，Python 很慢，我不关心
+                        </a>
+                    </h2>
+                    <div class="meta">
+                                <span class="vditor-tooltipped vditor-tooltipped__n"
+                                      aria-label="创建日期">
+                                    <i class="icon-date"></i>
+                                    <time>
+                                    2019-01-04
+                                    </time>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="评论数">
+                                    <i class="icon-comments"></i>
+                                    <a href="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html#b3logsolocomments">
+                                        <span data-uvstatcmt="1546579476114">0</span> 评论</a>
+                                </span>
+                        &nbsp; | &nbsp;
+                        <span class="vditor-tooltipped vditor-tooltipped__n" aria-label="浏览数">
+                                    <i class="icon-views"></i>
+                        <span data-uvstaturl="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html">261</span> 浏览
+                                </span>
+                    </div>
+                </header>
+
+                <div class="vditor-reset post__content">
+                    <p>原文链接：<a href="https://hackernoon.com/yes-python-is-slow-and-i-dont-care-13763980b5a1" target="_blank">https://hackernoon.com/yes-python-is-slow-and-i-dont-care-13763980b5a1</a></p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*pWAgROZ2JbYzlDgj.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>我正在讨论关于Python中的asyncio的讨论，以谈谈我最近想到的一些事情：Python的速度。对于那些不知道的人，我有点像Python粉丝，我尽我所能积极地使用Python。人们对Python的最大抱怨之一就是它很慢。有些人几乎拒绝尝试python，因为它比X慢。这是我的想法为什么你应该尝试python，尽管它很慢。</p>
+<h3 id="toc_h3_0"><strong>速度不再重要</strong></h3>
+<p>过去，程序需要很长时间才能运行。CPU价格昂贵，内存昂贵。程序的运行时间曾经是一个重要的指标。计算机非常昂贵，运行它们的电力也是如此。由于永恒的商业法，优化了这些资源：</p>
+<blockquote>
+<p>优化您最昂贵的资源。</p>
+</blockquote>
+<p>从历史上看，最昂贵的资源是计算机运行时间。这导致了计算机科学的研究，其关注于不同算法的效率。然而，这已不再适用，因为硅现在很便宜。就像<strong>真</strong>便宜。运行时间不再是您最昂贵的资源。公司最昂贵的资源现在是员工的时间。或者换句话说，你。完成任务比让它快速完成更重要。事实上，这是非常重要的，我将把它再次放在这里，好像它是一个引用（对于那些只是浏览的人）：</p>
+<blockquote>
+<p>完成任务比让它快速完成更重要。</p>
+</blockquote>
+<p>您可能会说，“我的公司关心速度，我构建一个Web应用程序，所有响应都必须快于x毫秒。”或者，“我们让客户取消，因为他们认为我们的应用程序太慢了。”我不是试图说速度根本不重要，我只是想说它不再是最重要的事情;这不是你最贵的资源。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*Z6j9zMua_w-T25TC.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>速度！</p>
+<h3 id="toc_h3_1"><strong>速度是唯一重要的事情</strong></h3>
+<p>当您在编程环境中说_速度_时，通常表示性能，即CPU周期。当你的CEO说_速度时_在编程的背景下，他意味着商业速度。最重要的指标是上市时间。最终，您的产品/网络应用程序的速度并不重要。它写的是什么语言无关紧要。它甚至不需要运行多少钱。在一天结束时，让您的公司生存或死亡的一件事就是上市时间。我不只是谈论创业的想法，直到你赚钱需要多长时间，但更多的是“从创意到顾客手中”的时间框架。在企业中生存的唯一方法是比竞争对手更快地进行创新。如果您的竞争对手在您之前“出货”，那么您想出多少好主意并不重要。你必须是第一个进入市场的人，或者至少要跟上。一旦你减速，你就完成了。</p>
+<blockquote>
+<p>在企业中生存的唯一方法是比竞争对手更快地进行创新。</p>
+</blockquote>
+<h4 id="toc_h4_2">一个微服务案例</h4>
+<p>亚马逊，谷歌和Netflix等公司都了解快速行动的重要性。他们创建了一个业务系统，可以快速移动并快速创新。微服务是他们问题的解决方案。本文与您是否应该使用微服务无关，但至少接受亚马逊和谷歌认为他们应该使用微服务。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/0*MBM9zatYv_Lzr3QN.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>微服务本来就很慢。微服务的概念是通过网络呼叫来打破边界。这意味着您正在进行函数调用（几个cpu周期）并将其转换为网络调用。在性能方面，你可以做的事情并不多。与CPU相比，网络调用非常慢。但这些大公司仍然选择使用微服务。实际上，我所知道的架构并不比微服务慢。微服务最大的优点是性能，但最好的专业是产品上市时间。通过围绕较小的项目和代码库建立团队，公司能够以更快的速度进行迭代和创新。这只是表明，非常大的公司也关心产品上市时间，而不仅仅是创业公司。</p>
+<h4 id="toc_h4_3">CPU不是你的瓶颈</h4>
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*s1RKhkRIBMEYji_w.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>如果编写网络应用程序（例如Web服务器），则可能是CPU时间不是应用程序的瓶颈。当您的Web服务器处理请求时，它可能会进行一些网络调用，例如数据库，或者像Redis这样的缓存服务器。虽然这些服务本身可能很快，但对它们的网络调用速度很慢。<a href="https://blog.codinghorror.com/the-infinite-space-between-words/" target="_blank">关于某些操作的速度差异，有一篇非常棒的博客文章。</a>在本文中，作者将CPU周期时间缩放到更易理解的人类时代。如果单个CPU周期相当于1秒，那么从加利福尼亚到纽约的网络呼叫将相当于4年。那就是网络速度慢了多少。对于一些粗略估计，假设同一数据中心内的正常网络呼叫大约需要3毫秒。这相当于我们“人类规模”的3个月。现在假设您的程序非常占用CPU，响应单个调用需要100,000个周期。这相当于超过1天。现在让我们假设你使用的语言慢了5倍，现在大约需要5天。那么，将它与我们3个月的网络电话进行比较，4天的差异根本不重要。如果有人必须等待至少3个月的包裹，我不会</p>
+<p>这最终意味着，即使python很慢，也没关系。语言的速度（或CPU时间）几乎不是问题。谷歌实际上对这个概念进行了研究，<a href="https://static.googleusercontent.com/media/research.google.com/en//archive/sawzall-sciprog.pdf" target="_blank">他们写了一篇论文</a>。本文讨论了设计高吞吐量系统。在结论中，他们说：</p>
+<blockquote>
+<p>在高吞吐量环境中使用解释语言似乎有些自相矛盾，但我们发现CPU时间很少是限制因素;语言的可表达性意味着大多数程序都很小，并且大部分时间都花在I / O和本地运行时代码上。此外，解释实现的灵活性有助于简化语言层面的实验，并允许我们探索在多台机器上分配计算的方法。</p>
+</blockquote>
+<p>或者，强调：</p>
+<blockquote>
+<p>CPU时间很少是限制因素</p>
+</blockquote>
+<h4 id="toc_h4_4">如果CPU时间什么<strong>是</strong>一个问题？</h4>
+<p>你可能会说，“这是伟大的，所有的，但我们不得不在那里CPU是我们的瓶颈，引起了我们的web应用程序太多放缓问题”，或“语言_X_需要的不仅仅是语言的运行速度大幅较少的硬件_Ÿ_在服务器上。”这一切皆有可能。关于Web服务器的精彩之处在于，您几乎可以无限地对它们进行负载均衡。换句话说，投入更多硬件。当然，Python可能需要比其他语言更好的硬件，例如C.只是在你的CPU问题上抛出硬件。与您的时间相比，硬件非常便宜。如果您在一年内节省了几周的生产力时间，那么这将超过增加的硬件成本。</p>
+<hr>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*mJFOcWsdEQq98gkF.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<h3 id="toc_h3_5">那么，Python更快吗？</h3>
+<p>这一直是我一直在谈论最重要的是开发时间。所以问题仍然存在：在开发时间方面，Python比语言X更快吗？有趣的是，我，<a href="https://www.codefellows.org/blog/5-reasons-why-python-is-powerful-enough-for-google/" target="_blank">谷歌</a>，<a href="https://www.lynda.com/Python-tutorials/Python-Programming-Efficiently/534425-2.html" target="_blank">和</a><a href="https://www.linuxjournal.com/article/3882" target="_blank">几个</a><a href="https://www.codeschool.com/blog/2016/01/27/why-python/" target="_blank">人</a>，可以告诉你如何更<a href="http://pythoncard.sourceforge.net/what_is_python.html" target="_blank">高效</a>Python是。它为您提取了很多东西，帮助您专注于您真正想要编写的代码，而不会陷入小事物的杂草中，例如是否应该使用矢量或数组。但你可能不愿意接受别人的话，所以让我们看一些更经验的数据。</p>
+<p>在大多数情况下，关于python是否更高效的争论实际上归结为脚本（或动态语言）与静态类型语言。我认为普遍认为静态类型语言的效率较低，但这<a href="http://www.tcl.tk/doc/scripting.html" target="_blank">是一篇很好的论文</a>，可以解释原因。特别<a href="http://www.connellybarnes.com/documents/language_productivity.pdf" target="_blank">是</a>在Python方面，<a href="http://www.connellybarnes.com/documents/language_productivity.pdf" target="_blank">这是一项</a>研究的<a href="http://www.connellybarnes.com/documents/language_productivity.pdf" target="_blank">一个很好的总结</a>，该研究着眼于为各种语言的字符串处理编写代码所花费的时间。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*cw7Oq54ZflGZhlFglDka4Q.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>用各种语言编写字符串处理应用程序需要多长时间。（Prechelt和Garret）</p>
+<p>在上面的研究中，Python的效率是Java的2倍。还有一些其他研究表明同样的事情。Rosetta Code对编程语言的差异进行了<a href="https://arxiv.org/pdf/1409.0252.pdf" target="_blank">相当深入的研究</a>。在本文中，他们将python与其他脚本/解释语言进行比较，并说：</p>
+<blockquote>
+<p>Python往往是最简洁的，甚至是功能语言（平均缩短1.2-1.6倍）</p>
+</blockquote>
+<p>常见的趋势似乎是Python中的“代码行”总是较少。代码行可能听起来像一个糟糕的指标，但<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.113.1831&amp;rep=rep1&amp;type=pdf" target="_blank">多项研究</a>，包括已经提到的两项<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.113.1831&amp;rep=rep1&amp;type=pdf" target="_blank">研究</a>表明，每行代码花费的时间在每种语言中大致相同。因此，限制代码行数，提高了生产力。甚至编码错误本身（C＃程序员）也<a href="https://blog.codinghorror.com/are-all-programming-languages-the-same/" target="_blank">写了一篇关于Python如何提高效率的文章</a>。</p>
+<p>我认为可以说Python比许多其他语言更有效率。这主要是因为python附带“包含电池”并且有许多第三方库。<a href="https://www.python.org/doc/essays/comparisons/" target="_blank">这是一篇简单的文章，讨论Python和X之间的差异。</a>如果你不知道为什么Python如此“小”和高效，我邀请你借此机会学习一些python并亲自看看。这是你的第一个项目：</p>
+<p><em>import __hello__</em></p>
+<hr>
+<h3 id="toc_h3_6">但是如果速度确实重要呢？</h3>
+<p><img src="https://cdn-images-1.medium.com/max/1200/0*bg31_URKZ7xzWy5I.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>运行时性能</p>
+<p>上面几点的基调可能会让它看起来像优化，速度根本不重要。但事实是，很多时候运行时性能确实很重要。一个例子是，您有一个Web应用程序，并且有一个特定的端点需要很长时间才能响应。你知道它需要多快，以及它需要改进多少。</p>
+<p>在我们的例子中，发生了几件事：</p>
+<ol>
+<li>我们注意到一个端点执行缓慢</li>
+<li>我们认为它很慢，因为我们有一个_足够快_的度量标准，并且它没有达到该指标。</li>
+</ol>
+<p>我们不必对应用程序中的所有内容进行微优化。一切都只需要“足够快”。您的用户可能会注意到端点需要几秒钟才能响应，但他们不会注意到您将35毫秒调用的响应时间提高到25毫秒。“足够好”，真的是你需要实现的一切。<em>免责声明</em>：<em>我也许应该指出，有</em><strong><em>一些</em></strong><em>应用，如实时竞价应用中，</em><strong><em>这样做</em></strong><em>需要微优化，以及每毫秒事做。但这是例外，而不是规则。</em></p>
+<p>为了弄清楚如何优化端点，您的第一步是分析代码并尝试找出瓶颈所在。毕竟：</p>
+<blockquote>
+<p>除瓶颈之外的任何改进都是幻觉。- 吉恩金</p>
+</blockquote>
+<p>如果您的优化没有触及瓶颈，那么您就是在浪费时间而不是解决真正的问题。在优化瓶颈之前，您不会得到任何重大改进。如果你在知道瓶颈之前尝试进行优化，那么你最终只能使用部分代码来玩耍。在测量和确定瓶颈所在之前优化代码称为“过早优化”。Donald Knuth经常被引用以下引用，但他声称他偷走了其他人的引用：</p>
+<blockquote>
+<p><em>过早优化是万恶之源。</em></p>
+</blockquote>
+<p>在谈论维护代码库时，Donald Knuth的更全面引用是：</p>
+<blockquote>
+<p>我们应该忘记小的效率，大约97％的时间说：**过早的优化是所有邪恶的根源。**然而，我们不应该放弃那个至关重要的3％的机会。</p>
+</blockquote>
+<p>换句话说，他说大多数时候，你需要忘记优化你的代码。它几乎总是足够好。在不够好的情况下，我们通常只需触摸3％的代码路径。如果你的端点使用if语句而不是函数，那么你的端点速度要快几秒，就不会赢得任何奖品。仅在测量后进行优化。</p>
+<p>过早优化包括调用某些_更快的_方法，甚至使用特定的数据结构，因为它通常更快。计算机科学认为，如果一种方法或算法具有与另一种方法或算法相同的渐近增长（或Big-O），那么它们是等价的，即使在实践中速度是2倍。计算机如此之快，以至于算法作为数据/使用的计算增长比实际速度本身更重要。换句话说，如果你有两个_O（log n）_函数，但是一个是慢两倍，那真的不重要。随着数据量的增加，它们都以相同的速度“减速”。这就是为什么过早优化是万恶之源;这浪费了我们的时间，而且几乎从来没有真正帮助我们的总体表现。</p>
+<p>就Big-O而言，你可以说<strong>所有</strong>语言都是你的程序的_O（n）_，其中n是代码行或指令。对于相同的指令，它们都以相同的速率增长。无论语言/运行时有多慢，在渐近增长方面，所有语言都是平等的。根据这个逻辑，你可以说为你的应用选择一种语言只是因为它的“快速”是过早优化的最终形式。你在没有测量的情况下选择一些所谓的快速的东西，而不了解瓶颈的位置。</p>
+<blockquote>
+<p>为您的应用选择一种语言只是因为它的“快速”是过早优化的最终形式。</p>
+</blockquote>
+<hr>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*6WaZOtaXLIo1Vy5H.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<h3 id="toc_h3_7">优化Python</h3>
+<p>关于Python我最喜欢的一件事是它可以让你一次优化代码。假设你有一个Python方法，你发现它是你的瓶颈。你已经多次对它进行了优化，可能会遵循<a href="https://wiki.python.org/moin/PythonSpeed" target="_blank">这里</a>和<a href="https://wiki.python.org/moin/PythonSpeed/PerformanceTips" target="_blank">那里的</a>一些指导，现在你已经非常确定Python本身就是瓶颈。Python能够调用C代码，这意味着您可以在C中重写这一个方法以减少性能问题。您可以一次执行此方法。此过程允许您以编译为C兼容汇编程序的任何语言编写优化的瓶颈方法。这允许您在大多数时间保持Python，并且只在您真正需要时才进入较低级别的事情。</p>
+<p>有一种名为Cython的语言是Python的超级集合。它几乎是Python和C的合并，是一种渐进式的语言。任何Python代码都是有效的Cython代码，Cython编译为C代码。使用Cython，您可以编写模块或方法，并慢慢地进展到越来越多的C类型和性能。您可以将C类型和Python的duck类型混合在一起。使用Cython，您可以获得仅在瓶颈上优化的完美组合，以及其他地方的Python之美。</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/0*LStEb38q3d2sOffq.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>Eve在线的截图：用Python编写的太空MMO</p>
+<p>当你最终遇到性能问题的Python墙时，你不需要将整个代码库移动到另一种语言。只需在Cython中重写几个方法，几乎​​总能获得所需的性能。这是<a href="https://www.eveonline.com/" target="_blank">Eve Online</a>采取的策略。Eve是一款大型多人计算机游戏，它使用Python和Cython进行整个堆栈。他们通过优化C / Cython中的瓶颈来实现游戏级别的性能。如果它适用于他们，它应该适用于大多数人。或者，还有其他方法来优化您的python。例如，<a href="http://pypy.org/" target="_blank">PyPy</a>是Python的JIT实现，只需通过使用PyPy交换CPython（默认实现），就可以为长时间运行的应用程序（例如Web服务器）提供显着的运行时改进。</p>
+<p><img src="https://cdn-images-1.medium.com/max/2000/0*mPc5j1btWBFz6YK7.jpg?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>让我们回顾一些要点：</p>
+<ul>
+<li>优化您最昂贵的资源。那是<strong>你</strong>，而不是电脑。</li>
+<li>选择可以帮助您快速开发的语言/框架/体系结构（例如Python）。不要仅仅因为技术快速而选择技术。</li>
+<li>遇到性能问题时：找到瓶颈</li>
+<li>您的瓶颈很可能不是CPU或Python本身。</li>
+<li>如果Python<strong>是</strong>你的瓶颈（你已经优化了算法/等），那么将热点移到Cython / C</li>
+<li>回去享受快速完成任务</li>
+</ul>
+<hr>
+<p>我希望你喜欢阅读这篇文章，就像我喜欢写这篇文章一样。如果您想说谢谢，只需按下拍击按钮，或按住它。另外，如果你想在某个时候跟我谈论Python，你可以在twitter（@nhumrich）上打我，或者我可以在<a href="http://pythondevelopers.herokuapp.com/" target="_blank">Python松弛频道</a>上找到它。</p>
+<p>[</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*0hqOaABQ7XGPT-OYNgiUBg.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>](<a href="http://bit.ly/HackernoonFB" target="_blank">http://bit.ly/HackernoonFB</a>)</p>
+<p>[</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*Vgw1jkA6hgnvwzTsfMlnpg.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>](<a href="https://goo.gl/k7XYbx" target="_blank">https://goo.gl/k7XYbx</a>)</p>
+<p>[</p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*gKBpq1ruUi0FVK2UM_I4tQ.png?imageView2/2/w/1280/format/jpg/interlace/1/q/100" alt=""></p>
+<p>](<a href="https://goo.gl/4ofytp" target="_blank">https://goo.gl/4ofytp</a>)</p>
+<blockquote>
+<p><a href="http://bit.ly/Hackernoon" target="_blank">Hacker Noon</a>是黑客开始下午的方式。我们是<a href="http://bit.ly/atAMIatAMI" target="_blank">@AMI</a>家族的一员。我们现在<a href="http://bit.ly/hackernoonsubmission" target="_blank">接受提交的内容，</a>并乐于<a href="mailto:partners@amipublications.com" target="_blank">讨论广告和赞助</a>机会。</p>
+</blockquote>
+<blockquote>
+<p>如果您喜欢这个故事，我们建议您阅读我们<a href="http://bit.ly/hackernoonlatestt" target="_blank">最新的科技故事</a>和<a href="https://hackernoon.com/trending" target="_blank">趋势科技故事</a>。直到下一次，不要把世界的现实视为理所当然！</p>
+</blockquote>
+                        <div>
+                            ---------------------------------------------------------------</br>
+>>  博客地址：<a href="https://blog.mufengs.com" target="_blank">https://blog.mufengs.com</a></br>
+>>  邮箱地址：<a href=mailto:mufeng5619@gmail.com target="_blank">mufeng5619@gmail.com</a></br>
+>>  微信帐号：Do8080</br>
+>>    Github       :  <a href="https://github.com/mufengcoding" target="_blank">https://github.com/mufengcoding</a></br>
+---------------------------------------------------------------</br>
+                        </div>
+                </div>
+
+                <footer class="tags">
+                        <a class="tag" rel="tag" href="https://blog.mufengs.com/tags/%E7%BF%BB%E8%AF%91">
+                            翻译</a>
+                        <a class="tag" rel="tag" href="https://blog.mufengs.com/tags/Python">
+                            Python</a>
+
+                    <div class="rel fn-clear ft__center">
+                            <a href="https://blog.mufengs.com/articles/2019/01/04/1546579369101.html" rel="prev"
+                               class="fn-left vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="[翻译] 为什么 Python 这么慢？">
+                                旧一篇
+                            </a>
+<div class="article__share"
+     data-title="[翻译] 是的，Python 很慢，我不关心"
+     data-blogtitle="mufengs 的个人博客"
+     data-url="https://blog.mufengs.com/articles/2019/01/04/1546579476114.html"
+     data-avatar="https://img.hacpai.com/avatar/1522743072387_1529850525222.?imageView2/1/w/128/h/128/format/jpg/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>                            <a href="https://blog.mufengs.com/articles/2019/01/05/1546703605353.html" rel="next"
+                               class="fn-right vditor-tooltipped vditor-tooltipped__n"
+                               aria-label="docker 容器之间互联">
+                                新一篇
+                            </a>
+                    </div>
+                </footer>
+                    <div id="b3logsolocomments"></div>
+                    <div id="vcomment" data-name="mufengcoding" data-postId="1546579476114"></div>
+                <br>
+                <div id="externalRelevantArticles" class="list"></div>
+                <div id="relevantArticles" class="list"></div>
+                <div id="randomArticles" class="list"></div>
+            </article>
+        </main>
+<aside>
+<ul class="article__toc">
+        <li class="toc__h3">
+            <a href="#toc_h3_0">速度不再重要</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_1">速度是唯一重要的事情</a>
+        </li>
+        <li class="toc__h4">
+            <a href="#toc_h4_2">一个微服务案例</a>
+        </li>
+        <li class="toc__h4">
+            <a href="#toc_h4_3">CPU不是你的瓶颈</a>
+        </li>
+        <li class="toc__h4">
+            <a href="#toc_h4_4">如果CPU时间什么是一个问题？</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_5">那么，Python更快吗？</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_6">但是如果速度确实重要呢？</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_7">优化Python</a>
+        </li>
+</ul></aside>
+    </div>
+</div>
+<footer class="footer fn-clear">
+    &copy; 2020
+    <a href="https://blog.mufengs.com">mufengs 的个人博客</a>
+    <script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?1d1cd729cc56392a866f3afd3b3eed58";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+    <br/>
+    Powered by <a href="https://solo.b3log.org" target="_blank">Solo</a>
+    <span class="ft-warn">&heartsuit;</span>
+    Theme 9IPHP
+    <sup>[<a href="https://github.com/9IPHP/9IPHP" target="_blank">ref</a>]</sup>
+    by <a href="http://vanessa.b3log.org" target="_blank">Vanessa</a>
+</footer>
+<div class="icon-up" onclick="Util.goTop()"></div>
+<script>
+  var Label = {
+    servePath: "https://blog.mufengs.com",
+    staticServePath: "https://blog.mufengs.com",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "3.9.0",
+    staticSite: true,
+    showCodeBlockLn: true,
+  }
+</script>
+<script src="https://blog.mufengs.com/skins/9IPHP/js/common.min.js?1582365382210"></script>
+
+<script type="text/javascript">
+    Util.addScript('https://blog.mufengs.com/js/page.min.js?1582365382210', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论内容只能为 2 到 500 个字符！",
+        "oId": "1546579476114",
+        "blogHost": "https://blog.mufengs.com",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+    page.tips.externalRelevantArticlesDisplayCount = "5";
+        page.loadExternalRelevantArticles("翻译,Python", "<header class='title'><h2>站外相关阅读</h2></header>");
+    Skin.initToc()
+    page.share()
+    });
+</script>
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 8ms, 2020/02/22 05:02:45 -->
